@@ -256,9 +256,8 @@ namespace RayTracer.UnitTests
         public void RayTuple_Multiply_ReturnsTheCorrectType(RayTupleType w, float scaler, Type type)
         {
             // Arrange
-            var (xOne, yOne, zOne) = CreateRandomPosition(_fixture);
-
-            var tuple = new RayTuple(xOne, yOne, zOne, w);
+            var (x, y, z) = CreateRandomPosition(_fixture);
+            var tuple = new RayTuple(x, y, z, w);
 
             // Act
             var multipliedTuple = tuple.Multiply(scaler);
@@ -282,6 +281,41 @@ namespace RayTracer.UnitTests
             // Assert
             var expected = Math.Sqrt(resultBeforeSqrt);
             Assert.Equal(expected, magnitude);
+        }
+
+        [Theory]
+        [InlineData(4, 0, 0, 1, 0, 0)]
+        [InlineData(1, 2, 3, 0.26726D, 0.53452D, 0.80178D)]
+        public void RayTuple_Normalise_ReturnsTheCorrectValue(
+            float x, float y, float z,
+            double expectedX, double expectedY, double expectedZ)
+        {
+            // Arrange
+            var tuple = new RayVector(x, y, z);
+
+            // Act
+            var normalisedTuple = tuple.Normalise();
+
+            // Assert
+            Assert.Equal(expectedX, Math.Round(normalisedTuple.X, 5));
+            Assert.Equal(expectedY, Math.Round(normalisedTuple.Y, 5));
+            Assert.Equal(expectedZ, Math.Round(normalisedTuple.Z, 5));
+        }
+
+        [Fact]
+        public void RayTuple_Normalise_MagnitudeOfNormalisedTupleShouldBeOne()
+        {
+            // Arrange
+            var (x, y, z) = CreateRandomPosition(_fixture);
+            var tuple = new RayVector(x, y, z);
+
+            // Act
+            var magnitude = tuple
+                .Normalise()
+                .Magnitude();
+
+            // Assert
+            Assert.Equal(1, Math.Round(magnitude, 5));
         }
 
         private (float x, float y, float z) CreateRandomPosition(Fixture fixture) =>

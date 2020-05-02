@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace RayTracer.Model
 {
@@ -80,6 +78,18 @@ namespace RayTracer.Model
                 (X * X) + (Y * Y) + (Z * Z) + ((int)W * (int)W);
             
             return Math.Sqrt(sumOfParametersSquared);
+        }
+
+        public RayTuple Normalise()
+        {
+            var magnitude = Magnitude();
+
+            var newX = (float)(X / magnitude);
+            var newY = (float)(Y / magnitude);
+            var newZ = (float)(Z / magnitude);
+            var newW = (RayTupleType)((int)W / magnitude);
+
+            return GetNewRayTuple(newX, newY, newZ, newW);
         }
 
         private RayTuple GetNewRayTuple(float newX, float newY, float newZ, RayTupleType newW)
