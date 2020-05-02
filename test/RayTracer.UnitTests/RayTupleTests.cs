@@ -187,6 +187,58 @@ namespace RayTracer.UnitTests
             Assert.Throws<NotSupportedException>(() => tupleOne.Add(tupleTwo));
         }
 
+        [Fact]
+        public void RayTuple_Subtract_ReturnsANewTupleWithPropertiesSubtracted()
+        {
+            // Arrange
+            var (xOne, yOne, zOne) = CreateRandomPosition(_fixture);
+            var (xTwo, yTwo, zTwo) = CreateRandomPosition(_fixture);
+
+            var tupleOne = new RayPoint(xOne, yOne, zOne);
+            var tupleTwo = new RayVector(xTwo, yTwo, zTwo);
+
+            // Act
+            var subtractedTuple = tupleOne.Subtract(tupleTwo);
+
+            // Assert
+            Assert.Equal(xOne - xTwo, subtractedTuple.X);
+            Assert.Equal(yOne - yTwo, subtractedTuple.Y);
+            Assert.Equal(zOne - zTwo, subtractedTuple.Z);
+        }
+
+        [Theory]
+        [InlineData(RayTupleType.Vector, RayTupleType.Vector, typeof(RayVector))]
+        [InlineData(RayTupleType.Point, RayTupleType.Vector, typeof(RayPoint))]
+        public void RayTuple_Subtract_ReturnsTheCorrectType(RayTupleType wOne, RayTupleType wTwo, Type type)
+        {
+            // Arrange
+            var (xOne, yOne, zOne) = CreateRandomPosition(_fixture);
+            var (xTwo, yTwo, zTwo) = CreateRandomPosition(_fixture);
+
+            var tupleOne = new RayTuple(xOne, yOne, zOne, wOne);
+            var tupleTwo = new RayTuple(xTwo, yTwo, zTwo, wTwo);
+
+            // Act
+            var summedTuple = tupleOne.Subtract(tupleTwo);
+
+            // Assert
+            Assert.IsType(type, summedTuple);
+        }
+
+        [Fact]
+        public void RayTuple_SubTract_ThrowsIfAPointIsSubtractedFromAVector()
+        {
+            // Arrange
+            var (xOne, yOne, zOne) = CreateRandomPosition(_fixture);
+            var (xTwo, yTwo, zTwo) = CreateRandomPosition(_fixture);
+
+            var tupleOne = new RayVector(xOne, yOne, zOne);
+            var tupleTwo = new RayPoint(xTwo, yTwo, zTwo);
+
+            // Act / Assert
+            Assert.Throws<NotSupportedException>(() => tupleOne.Subtract(tupleTwo));
+        }
+
         private (float x, float y, float z) CreateRandomPosition(Fixture fixture) =>
             (fixture.Create<float>(), fixture.Create<float>(), fixture.Create<float>());
     }

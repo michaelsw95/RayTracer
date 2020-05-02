@@ -52,5 +52,24 @@ namespace RayTracer.Model
 
             throw new NotSupportedException("Points should not be added together");
         }
+
+        public RayTuple Subtract(RayTuple other)
+        {
+            var newX = X - other.X;
+            var newY = Y - other.Y;
+            var newZ = Z - other.Z;
+            var newW = (int)W - (int)other.W;
+
+            if (newW == (int)RayTupleType.Vector)
+            {
+                return new RayVector(newX, newY, newZ);
+            }
+            else if (newW == (int)RayTupleType.Point)
+            {
+                return new RayPoint(newX, newY, newZ);
+            }
+
+            throw new NotSupportedException();
+        }
     }
 }
