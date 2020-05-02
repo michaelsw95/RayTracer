@@ -239,6 +239,25 @@ namespace RayTracer.UnitTests
             Assert.Throws<NotSupportedException>(() => tupleOne.Subtract(tupleTwo));
         }
 
+        [Theory]
+        [InlineData(RayTupleType.Point)]
+        [InlineData(RayTupleType.Vector)]
+        public void RayTuple_Negate_ReturnsANewNegatedTuple(RayTupleType w)
+        {
+            // Arrange
+            var (x, y, z) = CreateRandomPosition(_fixture);
+            var tuple = new RayTuple(x, y, z, w);
+
+            // Act
+            var negatedTuple = tuple.Negate();
+
+            // Assert
+            Assert.Equal(x * -1, negatedTuple.X);
+            Assert.Equal(y * -1, negatedTuple.Y);
+            Assert.Equal(z * -1, negatedTuple.Z);
+            Assert.Equal(w, negatedTuple.W);
+        }
+
         private (float x, float y, float z) CreateRandomPosition(Fixture fixture) =>
             (fixture.Create<float>(), fixture.Create<float>(), fixture.Create<float>());
     }

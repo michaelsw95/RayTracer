@@ -71,5 +71,21 @@ namespace RayTracer.Model
 
             throw new NotSupportedException();
         }
+
+        public RayTuple Negate()
+        {
+            var newX = X * -1;
+            var newY = Y * -1;
+            var newZ = Z * -1;
+
+            if (W == RayTupleType.Point)
+            {
+                return new RayPoint(newX, newY, newZ);
+            }
+            else
+            {
+                return new RayVector(newX, newY, newZ);
+            }
+        }
     }
 }
