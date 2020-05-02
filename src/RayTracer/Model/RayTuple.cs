@@ -41,16 +41,7 @@ namespace RayTracer.Model
             var newZ = Z + other.Z;
             var newW = (RayTupleType)((int)W + (int)other.W);
 
-            if (newW == RayTupleType.Vector)
-            {
-                return new RayVector(newX, newY, newZ);
-            }
-            else if (newW == RayTupleType.Point)
-            {
-                return new RayPoint(newX, newY, newZ);
-            }
-
-            return new RayTuple(newX, newY, newZ, newW);
+            return GetNewRayTuple(newX, newY, newZ, newW);
         }
 
         public RayTuple Subtract(RayTuple other)
@@ -60,16 +51,7 @@ namespace RayTracer.Model
             var newZ = Z - other.Z;
             var newW = (RayTupleType)((int)W - (int)other.W);
 
-            if (newW == RayTupleType.Vector)
-            {
-                return new RayVector(newX, newY, newZ);
-            }
-            else if (newW == RayTupleType.Point)
-            {
-                return new RayPoint(newX, newY, newZ);
-            }
-
-            return new RayTuple(newX, newY, newZ, newW);
+            return GetNewRayTuple(newX, newY, newZ, newW);
         }
 
         public RayTuple Negate()
@@ -79,16 +61,7 @@ namespace RayTracer.Model
             var newZ = Z * -1;
             var newW = (RayTupleType)((int)W * -1);
 
-            if (newW == RayTupleType.Vector)
-            {
-                return new RayVector(newX, newY, newZ);
-            }
-            else if (newW == RayTupleType.Point)
-            {
-                return new RayPoint(newX, newY, newZ);
-            }
-
-            return new RayTuple(newX, newY, newZ, newW);
+            return GetNewRayTuple(newX, newY, newZ, newW);
         }
 
         public RayTuple Multiply(float scaler)
@@ -98,6 +71,11 @@ namespace RayTracer.Model
             var newZ = Z * scaler;
             var newW = (RayTupleType)((int)W * scaler);
 
+            return GetNewRayTuple(newX, newY, newZ, newW);
+        }
+
+        private RayTuple GetNewRayTuple(float newX, float newY, float newZ, RayTupleType newW)
+        {
             if (newW == RayTupleType.Vector)
             {
                 return new RayVector(newX, newY, newZ);
