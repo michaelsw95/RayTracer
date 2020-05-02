@@ -73,14 +73,15 @@ namespace RayTracer.UnitTests
         {
             // Arrange
             var (x, y, z) = CreateRandomPosition(_fixture);
-            var w = 0;
+
+            var tupleOne = new RayVector(x, y, z);
+            var tupleTwo = new RayVector(x, y, z);
 
             // Act
-            var tupleOne = new RayTuple(x, y, z, (RayTupleType)w);
-            var tupleTwo = new RayTuple(x, y, z, (RayTupleType)w);
-
+            var isEqual = tupleOne.IsEqual(tupleTwo);
+            
             // Assert
-            Assert.True(tupleOne.IsEqual(tupleTwo));
+            Assert.True(isEqual);
         }
 
         [Fact]
@@ -90,14 +91,15 @@ namespace RayTracer.UnitTests
             var (x, y, _) = CreateRandomPosition(_fixture);
             var zOne = 1.23456F;
             var zTwo = zOne + 0.000005F;
-            var w = 0;
+
+            var tupleOne = new RayVector(x, y, zOne);
+            var tupleTwo = new RayVector(x, y, zTwo);
 
             // Act
-            var tupleOne = new RayTuple(x, y, zOne, (RayTupleType)w);
-            var tupleTwo = new RayTuple(x, y, zTwo, (RayTupleType)w);
+            var isEqual = tupleOne.IsEqual(tupleTwo);
 
             // Assert
-            Assert.True(tupleOne.IsEqual(tupleTwo));
+            Assert.True(isEqual);
         }
 
         [Fact]
@@ -106,14 +108,15 @@ namespace RayTracer.UnitTests
             // Arrange
             var (xOne, yOne, zOne) = CreateRandomPosition(_fixture);
             var (xTwo, yTwo, zTwo) = CreateRandomPosition(_fixture);
-            var w = 0;
+
+            var tupleOne = new RayPoint(xOne, yOne, zOne);
+            var tupleTwo = new RayPoint(xTwo, yTwo, zTwo);
 
             // Act
-            var tupleOne = new RayTuple(xOne, yOne, zOne, (RayTupleType)w);
-            var tupleTwo = new RayTuple(xTwo, yTwo, zTwo, (RayTupleType)w);
+            var isEqual = tupleOne.IsEqual(tupleTwo);
 
             // Assert
-            Assert.False(tupleOne.IsEqual(tupleTwo));
+            Assert.False(isEqual);
         }
 
         [Fact]
@@ -121,15 +124,15 @@ namespace RayTracer.UnitTests
         {
             // Arrange
             var (x, y, z) = CreateRandomPosition(_fixture);
-            var wOne = 0;
-            var wTwo = 1;
+
+            var tupleOne = new RayPoint(x, y, z);
+            var tupleTwo = new RayVector(x, y, z);
 
             // Act
-            var tupleOne = new RayTuple(x, y, z, (RayTupleType)wOne);
-            var tupleTwo = new RayTuple(x, y, z, (RayTupleType)wTwo);
+            var isEqual = tupleOne.IsEqual(tupleTwo);
 
             // Assert
-            Assert.False(tupleOne.IsEqual(tupleTwo));
+            Assert.False(isEqual);
         }
 
         [Fact]
