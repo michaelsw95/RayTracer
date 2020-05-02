@@ -1,4 +1,5 @@
-﻿using AutoFixture;
+﻿using System;
+using AutoFixture;
 using RayTracer.Model;
 using Xunit;
 
@@ -129,6 +130,58 @@ namespace RayTracer.UnitTests
 
             // Assert
             Assert.False(tupleOne.IsEqual(tupleTwo));
+        }
+
+        [Fact]
+        public void RayTuple_Add_ReturnsANewTupleWithPropertiesSummedTogether()
+        {
+            // Arrange
+            var (xOne, yOne, zOne) = CreateRandomPosition(_fixture);
+            var (xTwo, yTwo, zTwo) = CreateRandomPosition(_fixture);
+
+            var tupleOne = new RayPoint(xOne, yOne, zOne);
+            var tupleTwo = new RayVector(xTwo, yTwo, zTwo);
+
+            // Act
+            var summedTuple = tupleOne.Add(tupleTwo);
+
+            // Assert
+            Assert.Equal(xOne + xTwo, summedTuple.X);
+            Assert.Equal(yOne + yTwo, summedTuple.Y);
+            Assert.Equal(zOne + zTwo, summedTuple.Z);
+        }
+
+        [Theory]
+        [InlineData(RayTupleType.Vector, RayTupleType.Vector, typeof(RayVector))]
+        [InlineData(RayTupleType.Vector, RayTupleType.Point, typeof(RayPoint))]
+        public void RayTuple_Add_ReturnsTheCorrectType(RayTupleType wOne, RayTupleType wTwo, Type type)
+        {
+            // Arrange
+            var (xOne, yOne, zOne) = CreateRandomPosition(_fixture);
+            var (xTwo, yTwo, zTwo) = CreateRandomPosition(_fixture);
+
+            var tupleOne = new RayTuple(xOne, yOne, zOne, wOne);
+            var tupleTwo = new RayTuple(xTwo, yTwo, zTwo, wTwo);
+
+            // Act
+            var summedTuple = tupleOne.Add(tupleTwo);
+
+            // Assert
+            Assert.IsType(type, summedTuple);
+        }
+
+        [Fact]
+        public void RayTuple_Add_ThrowsIfTwoPointsAreAddedTogether()
+        {
+            // Arrange
+            var (xOne, yOne, zOne) = CreateRandomPosition(_fixture);
+            var (xTwo, yTwo, zTwo) = CreateRandomPosition(_fixture);
+
+            var tupleOne = new RayPoint(xOne, yOne, zOne);
+            var tupleTwo = new RayPoint(xTwo, yTwo, zTwo);
+
+            // Act / Assert
+            Assert.Throws<NotSupportedException>(() => tupleOne.Add(tupleTwo));
         }
 
         private (float x, float y, float z) CreateRandomPosition(Fixture fixture) =>
