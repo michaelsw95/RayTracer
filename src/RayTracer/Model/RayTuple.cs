@@ -90,5 +90,24 @@ namespace RayTracer.Model
 
             return new RayTuple(newX, newY, newZ, newW);
         }
+
+        public RayTuple Multiply(float scaler)
+        {
+            var newX = X * scaler;
+            var newY = Y * scaler;
+            var newZ = Z * scaler;
+            var newW = (RayTupleType)((int)W * scaler);
+
+            if (newW == RayTupleType.Vector)
+            {
+                return new RayVector(newX, newY, newZ);
+            }
+            else if (newW == RayTupleType.Point)
+            {
+                return new RayPoint(newX, newY, newZ);
+            }
+
+            return new RayTuple(newX, newY, newZ, newW);
+        }
     }
 }

@@ -232,6 +232,41 @@ namespace RayTracer.UnitTests
             Assert.Equal((RayTupleType)((int)w * -1), negatedTuple.W);
         }
 
+        [Fact]
+        public void RayTuple_Multiply_ReturnsANewTupleWithPropertiesMultipliedByScaler()
+        {
+            // Arrange
+            var (xOne, yOne, zOne) = CreateRandomPosition(_fixture);
+
+            var tuple = new RayPoint(xOne, yOne, zOne);
+
+            // Act
+            var multipliedTuple = tuple.Multiply(1.5F);
+
+            // Assert
+            Assert.Equal(xOne * 1.5F, multipliedTuple.X);
+            Assert.Equal(yOne * 1.5F, multipliedTuple.Y);
+            Assert.Equal(zOne * 1.5F, multipliedTuple.Z);
+            Assert.Equal((RayTupleType)((int)tuple.W * 1.5F), multipliedTuple.W);
+        }
+
+        [Theory]
+        [InlineData((RayTupleType)4, 0.25F, typeof(RayPoint))]
+        [InlineData(RayTupleType.Vector, 2F, typeof(RayVector))]
+        public void RayTuple_Multiply_ReturnsTheCorrectType(RayTupleType w, float scaler, Type type)
+        {
+            // Arrange
+            var (xOne, yOne, zOne) = CreateRandomPosition(_fixture);
+
+            var tuple = new RayTuple(xOne, yOne, zOne, w);
+
+            // Act
+            var multipliedTuple = tuple.Multiply(scaler);
+
+            // Assert
+            Assert.IsType(type, multipliedTuple);
+        }
+
         private (float x, float y, float z) CreateRandomPosition(Fixture fixture) =>
             (fixture.Create<float>(), fixture.Create<float>(), fixture.Create<float>());
     }
