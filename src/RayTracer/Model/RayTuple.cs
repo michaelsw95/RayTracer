@@ -39,18 +39,18 @@ namespace RayTracer.Model
             var newX = X + other.X;
             var newY = Y + other.Y;
             var newZ = Z + other.Z;
-            var newW = (int)W + (int)other.W;
+            var newW = (RayTupleType)((int)W + (int)other.W);
 
-            if (newW == (int)RayTupleType.Vector)
+            if (newW == RayTupleType.Vector)
             {
                 return new RayVector(newX, newY, newZ);
             }
-            else if (newW == (int)RayTupleType.Point)
+            else if (newW == RayTupleType.Point)
             {
                 return new RayPoint(newX, newY, newZ);
             }
 
-            throw new NotSupportedException("Points should not be added together");
+            return new RayTuple(newX, newY, newZ, newW);
         }
 
         public RayTuple Subtract(RayTuple other)
@@ -58,18 +58,18 @@ namespace RayTracer.Model
             var newX = X - other.X;
             var newY = Y - other.Y;
             var newZ = Z - other.Z;
-            var newW = (int)W - (int)other.W;
+            var newW = (RayTupleType)((int)W - (int)other.W);
 
-            if (newW == (int)RayTupleType.Vector)
+            if (newW == RayTupleType.Vector)
             {
                 return new RayVector(newX, newY, newZ);
             }
-            else if (newW == (int)RayTupleType.Point)
+            else if (newW == RayTupleType.Point)
             {
                 return new RayPoint(newX, newY, newZ);
             }
 
-            throw new NotSupportedException();
+            return new RayTuple(newX, newY, newZ, newW);
         }
 
         public RayTuple Negate()
@@ -77,15 +77,18 @@ namespace RayTracer.Model
             var newX = X * -1;
             var newY = Y * -1;
             var newZ = Z * -1;
+            var newW = (RayTupleType)((int)W * -1);
 
-            if (W == RayTupleType.Point)
-            {
-                return new RayPoint(newX, newY, newZ);
-            }
-            else
+            if (newW == RayTupleType.Vector)
             {
                 return new RayVector(newX, newY, newZ);
             }
+            else if (newW == RayTupleType.Point)
+            {
+                return new RayPoint(newX, newY, newZ);
+            }
+
+            return new RayTuple(newX, newY, newZ, newW);
         }
     }
 }

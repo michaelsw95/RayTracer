@@ -152,6 +152,7 @@ namespace RayTracer.UnitTests
             Assert.Equal(xOne + xTwo, summedTuple.X);
             Assert.Equal(yOne + yTwo, summedTuple.Y);
             Assert.Equal(zOne + zTwo, summedTuple.Z);
+            Assert.Equal((RayTupleType)((int)tupleOne.W + (int)tupleTwo.W), summedTuple.W);
         }
 
         [Theory]
@@ -174,20 +175,6 @@ namespace RayTracer.UnitTests
         }
 
         [Fact]
-        public void RayTuple_Add_ThrowsIfTwoPointsAreAddedTogether()
-        {
-            // Arrange
-            var (xOne, yOne, zOne) = CreateRandomPosition(_fixture);
-            var (xTwo, yTwo, zTwo) = CreateRandomPosition(_fixture);
-
-            var tupleOne = new RayPoint(xOne, yOne, zOne);
-            var tupleTwo = new RayPoint(xTwo, yTwo, zTwo);
-
-            // Act / Assert
-            Assert.Throws<NotSupportedException>(() => tupleOne.Add(tupleTwo));
-        }
-
-        [Fact]
         public void RayTuple_Subtract_ReturnsANewTupleWithPropertiesSubtracted()
         {
             // Arrange
@@ -204,6 +191,7 @@ namespace RayTracer.UnitTests
             Assert.Equal(xOne - xTwo, subtractedTuple.X);
             Assert.Equal(yOne - yTwo, subtractedTuple.Y);
             Assert.Equal(zOne - zTwo, subtractedTuple.Z);
+            Assert.Equal((RayTupleType)(tupleOne.W - tupleTwo.W), subtractedTuple.W);
         }
 
         [Theory]
@@ -225,20 +213,6 @@ namespace RayTracer.UnitTests
             Assert.IsType(type, summedTuple);
         }
 
-        [Fact]
-        public void RayTuple_SubTract_ThrowsIfAPointIsSubtractedFromAVector()
-        {
-            // Arrange
-            var (xOne, yOne, zOne) = CreateRandomPosition(_fixture);
-            var (xTwo, yTwo, zTwo) = CreateRandomPosition(_fixture);
-
-            var tupleOne = new RayVector(xOne, yOne, zOne);
-            var tupleTwo = new RayPoint(xTwo, yTwo, zTwo);
-
-            // Act / Assert
-            Assert.Throws<NotSupportedException>(() => tupleOne.Subtract(tupleTwo));
-        }
-
         [Theory]
         [InlineData(RayTupleType.Point)]
         [InlineData(RayTupleType.Vector)]
@@ -255,7 +229,7 @@ namespace RayTracer.UnitTests
             Assert.Equal(x * -1, negatedTuple.X);
             Assert.Equal(y * -1, negatedTuple.Y);
             Assert.Equal(z * -1, negatedTuple.Z);
-            Assert.Equal(w, negatedTuple.W);
+            Assert.Equal((RayTupleType)((int)w * -1), negatedTuple.W);
         }
 
         private (float x, float y, float z) CreateRandomPosition(Fixture fixture) =>
