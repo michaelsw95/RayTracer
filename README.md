@@ -1,0 +1,1 @@
+![.NET Core](https://github.com/MichaelHancock/RayTracer/workflows/.NET%20Core/badge.svg)
