@@ -267,6 +267,23 @@ namespace RayTracer.UnitTests
             Assert.IsType(type, multipliedTuple);
         }
 
+        [Theory]
+        [InlineData(0, 1, 0, 1)]
+        [InlineData(1, 2, 3, 14)]
+        [InlineData(-1, -2, -3, 14)]
+        public void RayTuple_Magnitude_ReturnsTheCorrectValue(float x, float y, float z, float resultBeforeSqrt)
+        {
+            // Arrange
+            var tuple = new RayVector(x, y, z);
+
+            // Act
+            var magnitude = tuple.Magnitude();
+
+            // Assert
+            var expected = Math.Sqrt(resultBeforeSqrt);
+            Assert.Equal(expected, magnitude);
+        }
+
         private (float x, float y, float z) CreateRandomPosition(Fixture fixture) =>
             (fixture.Create<float>(), fixture.Create<float>(), fixture.Create<float>());
     }

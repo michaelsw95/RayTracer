@@ -74,6 +74,14 @@ namespace RayTracer.Model
             return GetNewRayTuple(newX, newY, newZ, newW);
         }
 
+        public double Magnitude()
+        {
+            var sumOfParametersSquared =
+                (X * X) + (Y * Y) + (Z * Z) + ((int)W * (int)W);
+            
+            return Math.Sqrt(sumOfParametersSquared);
+        }
+
         private RayTuple GetNewRayTuple(float newX, float newY, float newZ, RayTupleType newW)
         {
             if (newW == RayTupleType.Vector)
