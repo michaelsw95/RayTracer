@@ -7,6 +7,6 @@
         {
         }
 
-        private const int W_IDENTIFIER = 1;
+        private const float W_IDENTIFIER = 1F;
     }
 }

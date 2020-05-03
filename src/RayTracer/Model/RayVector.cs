@@ -11,12 +11,6 @@ namespace RayTracer.Model
 
         public double Magnitude()
         {
-            if (IsPoint())
-            {
-                throw new InvalidOperationException(
-                    "Magnitude of points cannot be calcualted");
-            }
-
             var sumOfParametersSquared =
                 (X * X) + (Y * Y) + (Z * Z) + (W * W);
 
@@ -30,24 +24,12 @@ namespace RayTracer.Model
             var newX = (float)(X / magnitude);
             var newY = (float)(Y / magnitude);
             var newZ = (float)(Z / magnitude);
-            var newW = (float)(W / magnitude);
-
-            if (IsPoint(newW))
-            {
-                throw new InvalidOperationException("Points cannot be normalised");
-            }
 
             return new RayVector(newX, newY, newZ);
         }
 
         public float DotProduct(RayTuple other)
         {
-            if (IsPoint())
-            {
-                throw new InvalidOperationException(
-                    "Dot product of points cannot be calcualted");
-            }
-
             return (X * other.X) +
                    (Y * other.Y) +
                    (Z * other.Z) +
@@ -60,15 +42,9 @@ namespace RayTracer.Model
             var newY = (Z * other.X) - (X * other.Z);
             var newZ = (X * other.Y) - (Y * other.X);
 
-            if (IsPoint())
-            {
-                throw new InvalidOperationException(
-                    "Cross product of points cannot be calcualted");
-            }
-
             return new RayVector(newX, newY, newZ);
         }
 
-        private const int W_IDENTIFIER = 0;
+        private const float W_IDENTIFIER = 0F;
     }
 }
