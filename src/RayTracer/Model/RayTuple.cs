@@ -4,7 +4,7 @@ namespace RayTracer.Model
 {
     public class RayTuple
     {
-        public RayTuple(float xPosition, float yPosition, float zPosition, RayTupleType w)
+        public RayTuple(float xPosition, float yPosition, float zPosition, float w)
         {
             X = xPosition;
             Y = yPosition;
@@ -15,7 +15,7 @@ namespace RayTracer.Model
         public float X { get; }
         public float Y { get; }
         public float Z { get; }
-        public RayTupleType W { get; }
+        public float W { get; }
 
         public bool IsEqual(RayTuple other)
         {
@@ -37,7 +37,7 @@ namespace RayTracer.Model
             var newX = X + other.X;
             var newY = Y + other.Y;
             var newZ = Z + other.Z;
-            var newW = (RayTupleType)((int)W + (int)other.W);
+            var newW = W + other.W;
 
             return GetNewRayTuple(newX, newY, newZ, newW);
         }
@@ -47,7 +47,7 @@ namespace RayTracer.Model
             var newX = X - other.X;
             var newY = Y - other.Y;
             var newZ = Z - other.Z;
-            var newW = (RayTupleType)((int)W - (int)other.W);
+            var newW = W - other.W;
 
             return GetNewRayTuple(newX, newY, newZ, newW);
         }
@@ -57,7 +57,7 @@ namespace RayTracer.Model
             var newX = X * -1;
             var newY = Y * -1;
             var newZ = Z * -1;
-            var newW = (RayTupleType)((int)W * -1);
+            var newW = W * -1;
 
             return GetNewRayTuple(newX, newY, newZ, newW);
         }
@@ -67,55 +67,24 @@ namespace RayTracer.Model
             var newX = X * scaler;
             var newY = Y * scaler;
             var newZ = Z * scaler;
-            var newW = (RayTupleType)((int)W * scaler);
+            var newW = W * scaler;
 
             return GetNewRayTuple(newX, newY, newZ, newW);
         }
 
-        public double Magnitude()
+        public bool IsVector(float w) => w == 0;
+        public bool IsVector() => W == 0;
+
+        public bool IsPoint(float w) => w == 1;
+        public bool IsPoint() => W == 1;
+
+        protected RayTuple GetNewRayTuple(float newX, float newY, float newZ, float newW)
         {
-            var sumOfParametersSquared =
-                (X * X) + (Y * Y) + (Z * Z) + ((int)W * (int)W);
-            
-            return Math.Sqrt(sumOfParametersSquared);
-        }
-
-        public RayTuple Normalise()
-        {
-            var magnitude = Magnitude();
-
-            var newX = (float)(X / magnitude);
-            var newY = (float)(Y / magnitude);
-            var newZ = (float)(Z / magnitude);
-            var newW = (RayTupleType)((int)W / magnitude);
-
-            return GetNewRayTuple(newX, newY, newZ, newW);
-        }
-
-        public float DotProduct(RayTuple other)
-        {
-            return (X * other.X) +
-                   (Y * other.Y) +
-                   (Z * other.Z) +
-                   ((int)W * (int)other.Z);
-        }
-
-        public RayTuple CrossProduct(RayTuple other)
-        {
-            var newX = (Y * other.Z) - (Z * other.Y);
-            var newY = (Z * other.X) - (X * other.Z);
-            var newZ = (X * other.Y) - (Y * other.X);
-
-            return GetNewRayTuple(newX, newY, newZ, W);
-        }
-
-        private RayTuple GetNewRayTuple(float newX, float newY, float newZ, RayTupleType newW)
-        {
-            if (newW == RayTupleType.Vector)
+            if (IsVector(newW))
             {
                 return new RayVector(newX, newY, newZ);
             }
-            else if (newW == RayTupleType.Point)
+            else if (IsPoint(newW))
             {
                 return new RayPoint(newX, newY, newZ);
             }
