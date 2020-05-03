@@ -340,6 +340,29 @@ namespace RayTracer.UnitTests
             Assert.Equal(expected, dotProduct);
         }
 
+        [Theory]
+        [InlineData(1, 2, 3, 2, 3, 4, -1, 2, -1)]
+        [InlineData(2, 3, 4, 1, 2, 3, 1, -2, 1)]
+        public void RayTuple_CrossProduct_ReturnsTheCorrectValue(
+            float xOne, float yOne, float zOne,
+            float xTwo, float yTwo, float zTwo,
+            float expectedX, float expectedY, float expectedZ)
+        {
+            // Arrange
+            var tupleOne = new RayVector(xOne, yOne, zOne);
+            var tupleTwo = new RayVector(xTwo, yTwo, zTwo);
+
+            // Act
+            var crossProduct = tupleOne.CrossProduct(tupleTwo);
+
+            // Assert
+            var expected = new RayVector(expectedX, expectedY, expectedZ);
+
+            Assert.Equal(expected.X, crossProduct.X);
+            Assert.Equal(expected.Y, crossProduct.Y);
+            Assert.Equal(expected.Z, crossProduct.Z);
+        }
+
         private (float x, float y, float z) CreateRandomPosition(Fixture fixture) =>
             (fixture.Create<float>(), fixture.Create<float>(), fixture.Create<float>());
     }

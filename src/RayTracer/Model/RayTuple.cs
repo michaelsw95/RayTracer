@@ -100,6 +100,15 @@ namespace RayTracer.Model
                    ((int)W * (int)other.Z);
         }
 
+        public RayTuple CrossProduct(RayTuple other)
+        {
+            var newX = (Y * other.Z) - (Z * other.Y);
+            var newY = (Z * other.X) - (X * other.Z);
+            var newZ = (X * other.Y) - (Y * other.X);
+
+            return GetNewRayTuple(newX, newY, newZ, W);
+        }
+
         private RayTuple GetNewRayTuple(float newX, float newY, float newZ, RayTupleType newW)
         {
             if (newW == RayTupleType.Vector)
