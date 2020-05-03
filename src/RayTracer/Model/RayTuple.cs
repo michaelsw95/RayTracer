@@ -92,6 +92,14 @@ namespace RayTracer.Model
             return GetNewRayTuple(newX, newY, newZ, newW);
         }
 
+        public float DotProduct(RayTuple other)
+        {
+            return (X * other.X) +
+                   (Y * other.Y) +
+                   (Z * other.Z) +
+                   ((int)W * (int)other.Z);
+        }
+
         private RayTuple GetNewRayTuple(float newX, float newY, float newZ, RayTupleType newW)
         {
             if (newW == RayTupleType.Vector)

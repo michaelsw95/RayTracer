@@ -318,6 +318,28 @@ namespace RayTracer.UnitTests
             Assert.Equal(1, Math.Round(magnitude, 5));
         }
 
+        [Fact]
+        public void RayTuple_DotProduct_ReturnsTheCorrectValue()
+        {
+            // Arrange
+            var (xOne, yOne, zOne) = CreateRandomPosition(_fixture);
+            var (xTwo, yTwo, zTwo) = CreateRandomPosition(_fixture);
+
+            var tupleOne = new RayVector(xOne, yOne, zOne);
+            var tupleTwo = new RayVector(xTwo, yTwo, zTwo);
+
+            // Act
+            var dotProduct = tupleOne.DotProduct(tupleTwo);
+
+            // Assert
+            var expected = (tupleOne.X * tupleTwo.X) +
+                           (tupleOne.Y * tupleTwo.Y) +
+                           (tupleOne.Z * tupleTwo.Z) +
+                           ((int)tupleOne.W * (int)tupleTwo.W);
+
+            Assert.Equal(expected, dotProduct);
+        }
+
         private (float x, float y, float z) CreateRandomPosition(Fixture fixture) =>
             (fixture.Create<float>(), fixture.Create<float>(), fixture.Create<float>());
     }
