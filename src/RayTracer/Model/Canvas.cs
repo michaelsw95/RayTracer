@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 
 namespace RayTracer.Model
 {
@@ -34,8 +35,59 @@ namespace RayTracer.Model
             _canvas[xPosition, yPosition] = colour;
         }
 
-        private readonly Colour[,] _canvas;
+        public string ConvertToPPM()
+        {
+            const string PPM_FileType_Header = "P3";
+            const int Max_Colour_Header = 255;
+            var fileSizeHeader = string.Format("{0} {1}", Width, Height);
+
+            var fileBuilder = new StringBuilder()
+                .AppendLine(PPM_FileType_Header)
+                .AppendLine(fileSizeHeader)
+                .AppendLine(Max_Colour_Header.ToString());
+
+            for (int i = 0; i < Height; i++)
+            {
+                var newLine = string.Empty;
+
+                for (int j = 0; j < Width; j++)
+                {
+                    var colour = GetPixel(j, i);
+
+                    var redPart = ScailColourForOutput(colour.Red);
+                    var greenPart = ScailColourForOutput(colour.Green);
+                    var bluePart = ScailColourForOutput(colour.Blue);
+
+                    newLine += $"{redPart} {greenPart} {bluePart} ";
+                }
+
+                fileBuilder.AppendLine(newLine.Trim());
+            }
+
+            return fileBuilder.ToString();
+
+            static int ScailColourForOutput(float colourValue)
+            {
+                var scailedValue = Convert.ToInt32(
+                    Math.Round(colourValue * Max_Colour_Header)
+                );
+
+                if (scailedValue > 255)
+                {
+                    scailedValue = 255;
+                }
+                else if (scailedValue < 0)
+                {
+                    scailedValue = 0;
+                }
+
+                return scailedValue;
+            }
+        }
+
         private bool WidthIsWithinRange(int width) => width <= (Width - 1) & width >= 0;
         private bool HeightIsWithinRange(int height) => height <= (Height - 1) & height >= 0;
+
+        private readonly Colour[,] _canvas;
     }
 }

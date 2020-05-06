@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using AutoFixture;
 using RayTracer.Model;
 using Xunit;
@@ -100,6 +101,77 @@ namespace RayTracer.UnitTests.ModelTests
             // Act / Assert
             Assert.Throws<IndexOutOfRangeException>(() => canvas.SetPixel(colour, width, height - 1));
             Assert.Throws<IndexOutOfRangeException>(() => canvas.SetPixel(colour, width - 1, height));
+        }
+
+        [Fact]
+        public void Canvas_ConvertToPPM_ReturnsStringWith_PPM_FileHeader()
+        {
+            // Arrange
+            var width = _fixture.Create<int>();
+            var height = _fixture.Create<int>();
+
+            var canvas = new Canvas(width, height);
+
+            // Act
+            var ppmString = canvas.ConvertToPPM();
+
+            // Assert
+            var headerLines = ppmString
+                .Split(Environment.NewLine)
+                .Take(3)
+                .ToArray();
+
+            Assert.Equal(3, headerLines.Length);
+            Assert.Equal("P3", headerLines[0]);
+            Assert.Equal($"{width} {height}", headerLines[1]);
+            Assert.Equal("255", headerLines[2]);
+        }
+
+        [Fact]
+        public void Canvas_ConvertToPPM_ReturnsStringWith_PPM_PixelData()
+        {
+            // Arrange
+            var canvas = new Canvas(5, 3);
+            var colourOne = new Colour(1.5F, 0, 0);
+            var colourTwo = new Colour(0, 0.5F, 0);
+            var colourThree = new Colour(-0.5F, 0, 1);
+
+            canvas.SetPixel(colourOne, 0, 0);
+            canvas.SetPixel(colourTwo, 2, 1);
+            canvas.SetPixel(colourThree, 4, 2);
+
+            // Act
+            var ppmString = canvas.ConvertToPPM();
+
+            // Assert
+            var pixelData = ppmString
+                .Split(Environment.NewLine)
+                .Skip(3)
+                .ToArray();
+
+            Assert.Equal(4, pixelData.Length);
+            Assert.Equal("255 0 0 0 0 0 0 0 0 0 0 0 0 0 0", pixelData[0]);
+            Assert.Equal("0 0 0 0 0 0 0 128 0 0 0 0 0 0 0", pixelData[1]);
+            Assert.Equal("0 0 0 0 0 0 0 0 0 0 0 0 0 0 255", pixelData[2]);
+        }
+
+        [Fact]
+        public void Canvas_ConvertToPPM_Returns_PPM_StringTerminatedWithNewLine()
+        {
+            // Arrange
+            var width = _fixture.Create<int>();
+            var height = _fixture.Create<int>();
+
+            var canvas = new Canvas(width, height);
+
+            // Act
+            var ppmString = canvas.ConvertToPPM();
+
+            // Assert
+            var newLineLength = Environment.NewLine.Length;
+            var lastCharacters = ppmString.Substring(ppmString.Length - newLineLength);
+
+            Assert.Equal(Environment.NewLine, lastCharacters);
         }
     }
 }
