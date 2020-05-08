@@ -6,11 +6,11 @@ using Xunit;
 
 namespace RayTracer.UnitTests.ModelTests
 {
-    public class CanvasModelTests
+    public class CanvasTests
     {
         private Fixture _fixture;
 
-        public CanvasModelTests()
+        public CanvasTests()
         {
             _fixture = new Fixture();
         }

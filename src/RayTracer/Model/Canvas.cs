@@ -37,80 +37,79 @@ namespace RayTracer.Model
 
         public string ConvertToPPM()
         {
-            const string PPM_FileType_Header = "P3";
-            const int Max_Colour_Header = 255;
-            var fileSizeHeader = string.Format("{0} {1}", Width, Height);
+            var ppmFileStringBuilder = new StringBuilder();
+            ppmFileStringBuilder = AddHeaderLinesForPPM(ppmFileStringBuilder);
 
-            var fileBuilder = new StringBuilder()
-                .AppendLine(PPM_FileType_Header)
-                .AppendLine(fileSizeHeader)
-                .AppendLine(Max_Colour_Header.ToString());
-
-            var newLine = string.Empty;
+            var fileLine = string.Empty;
             for (int i = 0; i < Height; i++)
             {
                 for (int j = 0; j < Width; j++)
                 {
                     var colour = GetPixel(j, i);
 
-                    newLine += ScailColourForOutput(colour.Red).ToString() + " ";
+                    fileLine += PlotColourPart(colour.Red);
+                    AddNewLineIfNeeded();
 
-                    if (newLine.Length > 65)
-                    {
-                        fileBuilder.AppendLine(newLine.Trim());
-                        newLine = "";
-                    }
+                    fileLine += PlotColourPart(colour.Green);
+                    AddNewLineIfNeeded();
 
-                    newLine += ScailColourForOutput(colour.Green).ToString() + " ";
-
-                    if (newLine.Length > 65)
-                    {
-                        fileBuilder.AppendLine(newLine.Trim());
-                        newLine = "";
-                    }
-
-                    newLine += ScailColourForOutput(colour.Blue).ToString() + " ";
-
-                    if (newLine.Length > 65)
-                    {
-                        fileBuilder.AppendLine(newLine.Trim());
-                        newLine = "";
-                    }
+                    fileLine += PlotColourPart(colour.Blue);
+                    AddNewLineIfNeeded();
                 }
 
-                fileBuilder.AppendLine(newLine.Trim());
-                newLine = "";
+                ppmFileStringBuilder.AppendLine(fileLine.Trim());
+                fileLine = "";
             }
 
-            if (newLine.Length > 0)
+            return ppmFileStringBuilder.ToString();
+
+            void AddNewLineIfNeeded()
             {
-                fileBuilder.AppendLine(newLine);
-            }
-
-            return fileBuilder.ToString();
-
-            static int ScailColourForOutput(float colourValue)
-            {
-                var scailedValue = Convert.ToInt32(
-                    Math.Round(colourValue * Max_Colour_Header)
-                );
-
-                if (scailedValue > 255)
+                const int Line_Break_Length = 65;
+                if (fileLine.Length > Line_Break_Length)
                 {
-                    scailedValue = 255;
+                    ppmFileStringBuilder.AppendLine(fileLine.Trim());
+                    fileLine = "";
                 }
-                else if (scailedValue < 0)
-                {
-                    scailedValue = 0;
-                }
-
-                return scailedValue;
             }
         }
 
         private bool WidthIsWithinRange(int width) => width <= (Width - 1) & width >= 0;
         private bool HeightIsWithinRange(int height) => height <= (Height - 1) & height >= 0;
 
+        private StringBuilder AddHeaderLinesForPPM(StringBuilder stringBuilder)
+        {
+            const string PPM_FileType_Header = "P3";
+            var fileSizeHeader = string.Format("{0} {1}", Width, Height);
+
+            return stringBuilder
+                .AppendLine(PPM_FileType_Header)
+                .AppendLine(fileSizeHeader)
+                .AppendLine(Max_Colour_Header.ToString());
+        }
+
+        private string PlotColourPart(float colourPart)
+        {
+            return ScailColourForCanvas(colourPart).ToString() + " ";
+        }
+
+        private int ScailColourForCanvas(float colourValue)
+        {
+            var scailedValue = Convert.ToInt32(colourValue * Max_Colour_Header);
+
+            if (scailedValue > Max_Colour_Header)
+            {
+                scailedValue = Max_Colour_Header;
+            }
+            else if (scailedValue < 0)
+            {
+                scailedValue = 0;
+            }
+
+            return scailedValue;
+        }
+
+        private const int Max_Colour_Header = 255;
         private readonly Colour[,] _canvas;
     }
 }
