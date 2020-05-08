@@ -46,22 +46,45 @@ namespace RayTracer.Model
                 .AppendLine(fileSizeHeader)
                 .AppendLine(Max_Colour_Header.ToString());
 
+            var newLine = string.Empty;
             for (int i = 0; i < Height; i++)
             {
-                var newLine = string.Empty;
-
                 for (int j = 0; j < Width; j++)
                 {
                     var colour = GetPixel(j, i);
 
-                    var redPart = ScailColourForOutput(colour.Red);
-                    var greenPart = ScailColourForOutput(colour.Green);
-                    var bluePart = ScailColourForOutput(colour.Blue);
+                    newLine += ScailColourForOutput(colour.Red).ToString() + " ";
 
-                    newLine += $"{redPart} {greenPart} {bluePart} ";
+                    if (newLine.Length > 65)
+                    {
+                        fileBuilder.AppendLine(newLine.Trim());
+                        newLine = "";
+                    }
+
+                    newLine += ScailColourForOutput(colour.Green).ToString() + " ";
+
+                    if (newLine.Length > 65)
+                    {
+                        fileBuilder.AppendLine(newLine.Trim());
+                        newLine = "";
+                    }
+
+                    newLine += ScailColourForOutput(colour.Blue).ToString() + " ";
+
+                    if (newLine.Length > 65)
+                    {
+                        fileBuilder.AppendLine(newLine.Trim());
+                        newLine = "";
+                    }
                 }
 
                 fileBuilder.AppendLine(newLine.Trim());
+                newLine = "";
+            }
+
+            if (newLine.Length > 0)
+            {
+                fileBuilder.AppendLine(newLine);
             }
 
             return fileBuilder.ToString();

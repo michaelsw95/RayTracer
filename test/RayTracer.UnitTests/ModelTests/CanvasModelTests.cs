@@ -173,5 +173,31 @@ namespace RayTracer.UnitTests.ModelTests
 
             Assert.Equal(Environment.NewLine, lastCharacters);
         }
+
+        [Fact]
+        public void Canvas_ConvertToPPM_Returns_PPM_StringWithAllLinesShorterThan70Characters()
+        {
+            // Arrange
+            var colour = new Colour(1, 1, 1);
+            var canvas = new Canvas(10, 2);
+            for (int i = 0; i < canvas.Height; i++)
+            {
+                for (int j = 0; j < canvas.Width; j++)
+                {
+                    canvas.SetPixel(colour, j, i);
+                }
+            }
+
+            // Act
+            var ppmString = canvas.ConvertToPPM();
+
+            // Assert
+            var lines = ppmString.Split(Environment.NewLine);
+
+            foreach (var line in lines)
+            {
+                Assert.True(line.Length < 70);
+            }
+        }
     }
 }
