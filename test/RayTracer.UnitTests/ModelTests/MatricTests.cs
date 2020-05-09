@@ -165,5 +165,38 @@ namespace RayTracer.UnitTests.ModelTests
             // Assert
             Assert.True(isEqual);
         }
+
+        [Fact]
+        public void Matrix_Multiply_ReturnsNewMatrixWithComponentsMultiplied()
+        {
+            // Arrange
+            var matrixOne = new MatrixBuilder(4)
+                .WithRow(1, 2, 3, 4)
+                .WithRow(5, 6, 7, 8)
+                .WithRow(9, 8, 7, 6)
+                .WithRow(5, 4, 3, 2)
+                .Create();
+
+            var matrixTwo = new MatrixBuilder(4)
+                .WithRow(-2, 1, 2, 3)
+                .WithRow(3, 2, 1, -1)
+                .WithRow(4, 3, 6, 5)
+                .WithRow(1, 2, 7, 8)
+                .Create();
+
+            // Act
+            var multipliedMatrix = matrixOne.Multiply(matrixTwo);
+
+            // Assert
+            var expected = new MatrixBuilder(4)
+                .WithRow(20, 22, 50, 48)
+                .WithRow(44, 54, 114, 108)
+                .WithRow(40, 58, 110, 102)
+                .WithRow(16, 26, 46, 42)
+                .Create();
+
+            var isEqual = multipliedMatrix.IsEqual(expected);
+            Assert.True(isEqual);
+        }
     }
 }
