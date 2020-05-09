@@ -17,8 +17,7 @@ namespace RayTracer.UnitTests.ModelTests
                 .Create();
 
             // Assert
-            Assert.Equal(0, matrix.Rows);
-            Assert.Equal(0, matrix.Columns);
+            Assert.Equal(0, matrix.Size);
         }
 
         [Fact]
@@ -32,12 +31,10 @@ namespace RayTracer.UnitTests.ModelTests
                 .WithRow(1, 2, 3)
                 .WithRow(4, 5, 6)
                 .WithRow(7, 8, 9)
-                .WithRow(10, 11, 12)
                 .Create();
 
             // Assert
-            Assert.Equal(4, matrix.Rows);
-            Assert.Equal(3, matrix.Columns);
+            Assert.Equal(3, matrix.Size);
         }
 
         [Fact]
@@ -55,6 +52,21 @@ namespace RayTracer.UnitTests.ModelTests
             // Assert
             Assert.Throws<ArgumentException>(() => builder.WithRow(10, 11));
             Assert.Throws<ArgumentException>(() => builder.WithRow(10, 11, 12, 13));
+        }
+
+        [Fact]
+        public void MatrixBuilder_Create_ThrowsIfMatrixIsNotSquare()
+        {
+            // Arrange
+            var builder = new MatrixBuilder();
+
+            // Act
+            builder
+                .WithRow(1, 2, 3)
+                .WithRow(4, 5, 6);
+
+            // Assert
+            Assert.Throws<InvalidOperationException>(() => builder.Create());
         }
     }
 }

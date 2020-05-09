@@ -17,13 +17,13 @@ namespace RayTracer.Model
 
         public MatrixBuilder WithRow(params float[] values)
         {
-            if (_expectedWidth.HasValue && values.Length != _expectedWidth)
+            if (_expectedSize.HasValue && values.Length != _expectedSize)
             {
                 throw new ArgumentException("Rows must all have the same number of values");
             }
-            else if (!_expectedWidth.HasValue)
+            else if (!_expectedSize.HasValue)
             {
-                _expectedWidth = values.Length;
+                _expectedSize = values.Length;
             }
 
             _data.Add(values);
@@ -34,16 +34,21 @@ namespace RayTracer.Model
 
         public Matrix Create()
         {
-            if (!_expectedWidth.HasValue)
+            if (!_expectedSize.HasValue)
             {
-                return new Matrix(0, 0);
+                return new Matrix(0);
             }
 
-            var matrix = new Matrix(_data.Count, _expectedWidth.Value);
-
-            for (int i = 0; i < _data.Count; i++)
+            if (_data.Count != _expectedSize)
             {
-                for (int j = 0; j < _expectedWidth.Value; j++)
+                throw new InvalidOperationException("Cannot create non-square matrix");
+            }
+
+            var matrix = new Matrix(_expectedSize.Value);
+
+            for (int i = 0; i < _expectedSize.Value; i++)
+            {
+                for (int j = 0; j < _expectedSize.Value; j++)
                 {
                     matrix.Set(_data[i][j], i, j);
                 }
@@ -53,6 +58,6 @@ namespace RayTracer.Model
         }
 
         private readonly List<float[]> _data;
-        private int? _expectedWidth;
+        private int? _expectedSize;
     }
 }

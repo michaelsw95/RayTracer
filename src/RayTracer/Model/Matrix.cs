@@ -4,25 +4,12 @@ namespace RayTracer.Model
 {
     public class Matrix
     {
-        public Matrix(int rows, int columns)
+        public Matrix(int size)
         {
-            _matrix = new float[rows, columns];
+            _matrix = new float[size, size];
         }
 
-        public Matrix(float[,] data)
-            : this(data.GetLength(0), data.GetLength(1))
-        {
-            for (int i = 0; i < Rows; i++)
-            {
-                for (int j = 0; j < Columns; j++)
-                {
-                    Set(data[i, j], i, j);
-                }
-            }
-        }
-
-        public int Rows { get => _matrix.GetLength(0); }
-        public int Columns { get => _matrix.GetLength(1); }
+        public int Size { get => _matrix.GetLength(0); }
 
         public float Get(int row, int column)
         {
@@ -43,9 +30,14 @@ namespace RayTracer.Model
                 return Math.Abs(a - b) < EPSILON;
             }
 
-            for (int i = 0; i < Rows; i++)
+            if (Size != other.Size)
             {
-                for (int j = 0; j < Columns; j++)
+                return false;
+            }
+
+            for (int i = 0; i < Size; i++)
+            {
+                for (int j = 0; j < Size; j++)
                 {
                     if (!FloatIsEqual(_matrix[i, j], other._matrix[i, j]))
                     {
@@ -59,17 +51,17 @@ namespace RayTracer.Model
 
         public Matrix Multiply(Matrix matrixTwo)
         {
-            var matrix = new Matrix(Rows, Columns);
+            var matrix = new Matrix(Size);
 
-            for (int i = 0; i < Rows; i++)
+            for (int i = 0; i < Size; i++)
             {
-                for (int j = 0; j < Columns; j++)
+                for (int j = 0; j < Size; j++)
                 {
                     var row = GetRow(i);
                     var column = matrixTwo.GetColumn(j);
 
                     var product = 0F;
-                    for (int k = 0; k < Rows; k++)
+                    for (int k = 0; k < Size; k++)
                     {
                         product += row[k] * column[k];
                     }
@@ -83,9 +75,9 @@ namespace RayTracer.Model
 
         private float[] GetRow(int index)
         {
-            var row = new float[Columns];
+            var row = new float[Size];
 
-            for (int i = 0; i < Columns; i++)
+            for (int i = 0; i < Size; i++)
             {
                 row[i] = _matrix[index, i];
             }
@@ -95,9 +87,9 @@ namespace RayTracer.Model
 
         private float[] GetColumn(int index)
         {
-            var column = new float[Rows];
+            var column = new float[Size];
 
-            for (int i = 0; i < Rows; i++)
+            for (int i = 0; i < Size; i++)
             {
                 column[i] = _matrix[i, index];
             }
