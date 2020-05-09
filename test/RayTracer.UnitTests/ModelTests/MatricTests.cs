@@ -1,4 +1,5 @@
-﻿using AutoFixture;
+﻿using System;
+using AutoFixture;
 using RayTracer.Model;
 using Xunit;
 
@@ -173,6 +174,45 @@ namespace RayTracer.UnitTests.ModelTests
                 .Create();
 
             var isEqual = multipliedMatrix.IsEqual(expected);
+            Assert.True(isEqual);
+        }
+
+        [Fact]
+        public void Matrix_Multiply_ThrowsIfMatrixSizeIsNotFourAndMultiplyingByTuple()
+        {
+            // Arrange
+            var matrix = new MatrixBuilder(4)
+                .WithRow(1, 2, 3)
+                .WithRow(5, 6, 7)
+                .WithRow(9, 10, 11)
+                .Create();
+
+            var tuple = new RayTuple(1, 2, 3, 0);
+
+            // Act / Assert
+            Assert.Throws<NotSupportedException>(() => matrix.Multiply(tuple));
+        }
+
+        [Fact]
+        public void Matrix_Multiply_CanTakeATupleAndReturnNewMultipliedByMatrixComponenents()
+        {
+            // Arrange
+            var matrix = new MatrixBuilder(4)
+                .WithRow(1, 2, 3, 4)
+                .WithRow(2, 4, 4, 2)
+                .WithRow(8, 6, 4, 1)
+                .WithRow(0, 0, 0, 1)
+                .Create();
+
+            var tuple = new RayTuple(1, 2, 3, 1);
+
+            // Act
+            var multipliedTuple = matrix.Multiply(tuple);
+
+            // Assert
+            var expected = new RayTuple(18, 24, 33, 1);
+            var isEqual = expected.IsEqual(multipliedTuple);
+
             Assert.True(isEqual);
         }
     }

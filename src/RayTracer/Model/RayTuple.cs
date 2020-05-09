@@ -72,6 +72,17 @@ namespace RayTracer.Model
             return GetNewRayTuple(newX, newY, newZ, newW);
         }
 
+        public RayTuple Multiply(Matrix matrix)
+        {
+            var newTuple = matrix.Multiply(this);
+
+            return GetNewRayTuple(
+                newTuple.X,
+                newTuple.Y,
+                newTuple.Z,
+                newTuple.W);
+        }
+
         public bool IsVector(float w) => w == 0;
         public bool IsVector() => W == 0;
 

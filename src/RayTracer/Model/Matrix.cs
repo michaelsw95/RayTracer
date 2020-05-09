@@ -73,6 +73,42 @@ namespace RayTracer.Model
             return matrix;
         }
 
+        public RayTuple Multiply(RayTuple tuple)
+        {
+            if (Size != 4)
+            {
+                throw new NotSupportedException(
+                    "Only matrices of Size 4 can be multiplied by tuples");
+            }
+
+            var tupleValues = new float[4] {
+                tuple.X,
+                tuple.Y,
+                tuple.Z,
+                tuple.W
+            };
+
+            var newTupleValue = new float[4];
+            for (int i = 0; i < tupleValues.Length; i++)
+            {
+                var row = GetRow(i);
+
+                var product = 0F;
+                for (int j = 0; j < Size; j++)
+                {
+                    product += row[j] * tupleValues[j];
+                }
+
+                newTupleValue[i] = product;
+            }
+
+            return new RayTuple(
+                newTupleValue[0],
+                newTupleValue[1],
+                newTupleValue[2],
+                newTupleValue[3]);
+        }
+
         private float[] GetRow(int index)
         {
             var row = new float[Size];
