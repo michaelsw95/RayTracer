@@ -17,7 +17,12 @@ namespace RayTracer.Model
 
         public MatrixBuilder WithRow(params float[] values)
         {
-            if (_expectedSize.HasValue && values.Length != _expectedSize)
+            if (_isBuildingIdentityMatrix)
+            {
+                throw new NotSupportedException(
+                    "Cannot add rows to an Identity Matrix");
+            }
+            else if (_expectedSize.HasValue && values.Length != _expectedSize)
             {
                 throw new ArgumentException("Rows must all have the same number of values");
             }
@@ -31,15 +36,31 @@ namespace RayTracer.Model
             return this;
         }
 
+        public MatrixBuilder AsIdentityMatrix(int size)
+        {
+            if (_expectedSize.HasValue)
+            {
+                throw new NotSupportedException(
+                    "Identity Matrices cannot be constructed if rows have already been added");
+            }
+
+            _isBuildingIdentityMatrix = true;
+            _expectedSize = size;
+
+            return this;
+        }
 
         public Matrix Create()
         {
-            if (!_expectedSize.HasValue)
+            if (_isBuildingIdentityMatrix)
+            {
+                return BuildIdentiyMatrix(_expectedSize.Value);
+            }
+            else if (!_expectedSize.HasValue)
             {
                 return new Matrix(0);
             }
-
-            if (_data.Count != _expectedSize)
+            else if (_data.Count != _expectedSize)
             {
                 throw new InvalidOperationException("Cannot create non-square matrix");
             }
@@ -57,7 +78,29 @@ namespace RayTracer.Model
             return matrix;
         }
 
+        public void Reset(int newRowCapacity = 0)
+        {
+            _data.Clear();
+            _data.Capacity = newRowCapacity;
+
+            _expectedSize = null;
+            _isBuildingIdentityMatrix = false;
+        }
+
+        private Matrix BuildIdentiyMatrix(int size)
+        {
+            var matrix = new Matrix(size);
+
+            for (var i = 0; i < _expectedSize; i++)
+            {
+                matrix.Set(1, i, i);
+            }
+
+            return matrix;
+        }
+
         private readonly List<float[]> _data;
         private int? _expectedSize;
+        private bool _isBuildingIdentityMatrix;
     }
 }

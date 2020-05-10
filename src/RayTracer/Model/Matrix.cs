@@ -51,6 +51,12 @@ namespace RayTracer.Model
 
         public Matrix Multiply(Matrix matrixTwo)
         {
+            if (Size != matrixTwo.Size)
+            {
+                throw new NotSupportedException(
+                    "Matrices of different sizes cannot be multiplied together");
+            }
+
             var matrix = new Matrix(Size);
 
             for (int i = 0; i < Size; i++)

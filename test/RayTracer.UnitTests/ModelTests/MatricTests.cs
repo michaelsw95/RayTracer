@@ -145,6 +145,31 @@ namespace RayTracer.UnitTests.ModelTests
         }
 
         [Fact]
+        public void Matrix_Multiply_ThrowsIfMatricesOfDifferentSizesAreMultiplied()
+        {
+            // Arrange
+            var builder = new MatrixBuilder();
+
+            var matrixOne = builder
+                .WithRow(1, 2, 3)
+                .WithRow(4, 5, 6)
+                .WithRow(7, 8, 9)
+                .Create();
+
+            builder.Reset();
+
+            var matrixTwo = builder
+                .WithRow(1, 2)
+                .WithRow(4, 5)
+                .Create();
+
+            // Act / Assert
+            var multipliedMatrix = Assert.Throws<NotSupportedException>(
+                () => matrixOne.Multiply(matrixTwo)
+            );
+        }
+
+        [Fact]
         public void Matrix_Multiply_ReturnsNewMatrixWithComponentsMultiplied()
         {
             // Arrange
@@ -212,6 +237,35 @@ namespace RayTracer.UnitTests.ModelTests
             // Assert
             var expected = new RayTuple(18, 24, 33, 1);
             var isEqual = expected.IsEqual(multipliedTuple);
+
+            Assert.True(isEqual);
+        }
+
+        [Fact]
+        public void Matrix_Multiply_ReturnsTheSameMatrixIfMultipliedByIdentityMatrix()
+        {
+            // Arrange
+            var builder = new MatrixBuilder();
+
+            var matrix = builder
+                .WithRow(1, 2, 3)
+                .WithRow(4, 5, 6)
+                .WithRow(7, 8, 9)
+                .Create();
+
+            builder.Reset();
+
+            var identityMatrix = builder
+                .AsIdentityMatrix(3)
+                .Create();
+
+            // Act
+            var multipliedMatrix = matrix
+                .Multiply(identityMatrix);
+
+            // Assert
+            var isEqual = multipliedMatrix
+                .IsEqual(matrix);
 
             Assert.True(isEqual);
         }
