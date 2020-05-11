@@ -115,6 +115,21 @@ namespace RayTracer.Model
                 newTupleValue[3]);
         }
 
+        public Matrix Transpose()
+        {
+            var matrix = new Matrix(Size);
+
+            for (int i = 0; i < Size; i++)
+            {
+                for (int j = 0; j < Size; j++)
+                {
+                    matrix.Set(_matrix[i, j], j, i);
+                }
+            }
+
+            return matrix;
+        }
+
         private float[] GetRow(int index)
         {
             var row = new float[Size];

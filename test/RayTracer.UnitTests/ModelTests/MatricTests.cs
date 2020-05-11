@@ -269,5 +269,70 @@ namespace RayTracer.UnitTests.ModelTests
 
             Assert.True(isEqual);
         }
+
+        [Fact]
+        public void Matrix_Transpose_ReturnsTransposedMatrix()
+        {
+            // Arrange
+            var matrix = new MatrixBuilder(3)
+                .WithRow(1, 2, 3)
+                .WithRow(4, 5, 6)
+                .WithRow(7, 8, 9)
+                .Create();
+
+            // Act
+            var transposedMatrix = matrix.Transpose();
+
+            // Assert
+            var expected = new MatrixBuilder(3)
+                .WithRow(1, 4, 7)
+                .WithRow(2, 5, 8)
+                .WithRow(3, 6, 9)
+                .Create();
+
+            var isEqual = expected.IsEqual(transposedMatrix);
+
+            Assert.True(isEqual);
+        }
+
+        [Fact]
+        public void Matrix_Transpose_ReturnsTheOriginalMatrixIfCalledTwice()
+        {
+            // Arrange
+            var matrix = new MatrixBuilder(3)
+                .WithRow(1, 2, 3)
+                .WithRow(4, 5, 6)
+                .WithRow(7, 8, 9)
+                .Create();
+
+            // Act
+            var transposedMatrix = matrix
+                .Transpose()
+                .Transpose();
+
+            // Assert
+            var isEqual = matrix.IsEqual(transposedMatrix);
+
+            Assert.True(isEqual);
+        }
+
+        [Fact]
+        public void Matrix_Transpose_TransposedIdentityMatrixIsStillAnIdentityMatrix()
+        {
+            // Arrange
+            var identityMatrix = new MatrixBuilder()
+                .AsIdentityMatrix(3)
+                .Create();
+
+            // Act
+            var transposedMatrix = identityMatrix
+                .Transpose();
+
+            // Assert
+            var isEqual = identityMatrix
+                .IsEqual(transposedMatrix);
+
+            Assert.True(isEqual);
+        }
     }
 }
