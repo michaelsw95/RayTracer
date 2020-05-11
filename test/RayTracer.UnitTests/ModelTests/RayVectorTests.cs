@@ -2,7 +2,7 @@
 using RayTracer.Model;
 using Xunit;
 
-namespace RayTracer.ModelTests.UnitTests
+namespace RayTracer.UnitTests.ModelTests
 {
     public class RayVectorTests : BaseModelTests
     {
