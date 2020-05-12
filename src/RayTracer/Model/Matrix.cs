@@ -6,19 +6,20 @@ namespace RayTracer.Model
     {
         public Matrix(int size)
         {
-            _matrix = new float[size, size];
+            Size = size;
+            _matrix = new float[size * size];
         }
 
-        public int Size { get => _matrix.GetLength(0); }
+        public int Size { get; private set; }
 
         public float Get(int row, int column)
         {
-            return _matrix[row, column];
+            return _matrix[(row * Size) + column];
         }
 
         public void Set(float value, int row, int column)
         {
-            _matrix[row, column] = value;
+            _matrix[(row * Size) + column] = value;
         }
 
         public bool IsEqual(Matrix other)
@@ -39,7 +40,7 @@ namespace RayTracer.Model
             {
                 for (int j = 0; j < Size; j++)
                 {
-                    if (!FloatIsEqual(_matrix[i, j], other._matrix[i, j]))
+                    if (!FloatIsEqual(Get(i, j), other.Get(i, j)))
                     {
                         return false;
                     }
@@ -123,7 +124,7 @@ namespace RayTracer.Model
             {
                 for (int j = 0; j < Size; j++)
                 {
-                    matrix.Set(_matrix[i, j], j, i);
+                    matrix.Set(Get(i, j), j, i);
                 }
             }
 
@@ -136,7 +137,7 @@ namespace RayTracer.Model
 
             for (int i = 0; i < Size; i++)
             {
-                row[i] = _matrix[index, i];
+                row[i] = Get(index, i);
             }
 
             return row;
@@ -148,12 +149,12 @@ namespace RayTracer.Model
 
             for (int i = 0; i < Size; i++)
             {
-                column[i] = _matrix[i, index];
+                column[i] = Get(i, index);
             }
 
             return column;
         }
 
-        private readonly float[,] _matrix;
+        private readonly float[] _matrix;
     }
 }
