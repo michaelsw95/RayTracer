@@ -1,4 +1,5 @@
 ﻿using System;
+using RayTracer.Utility;
 
 namespace RayTracer.Model
 {
@@ -24,13 +25,6 @@ namespace RayTracer.Model
 
         public bool IsEqual(Matrix other)
         {
-            static bool FloatIsEqual(float a, float b)
-            {
-                const float EPSILON = 0.00001F;
-
-                return Math.Abs(a - b) < EPSILON;
-            }
-
             if (Size != other.Size)
             {
                 return false;
@@ -40,7 +34,7 @@ namespace RayTracer.Model
             {
                 for (int j = 0; j < Size; j++)
                 {
-                    if (!FloatIsEqual(Get(i, j), other.Get(i, j)))
+                    if (!Numeric.FloatIsEqual(Get(i, j), other.Get(i, j)))
                     {
                         return false;
                     }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text;
+using RayTracer.Utility;
 
 namespace RayTracer.Model
 {
@@ -97,16 +98,9 @@ namespace RayTracer.Model
         {
             var scailedValue = Convert.ToInt32(colourValue * Max_Colour_Header);
 
-            if (scailedValue > Max_Colour_Header)
-            {
-                scailedValue = Max_Colour_Header;
-            }
-            else if (scailedValue < 0)
-            {
-                scailedValue = 0;
-            }
+            var clamped = Numeric.Clamp(0, Max_Colour_Header, scailedValue);
 
-            return scailedValue;
+            return clamped;
         }
 
         private const int Max_Colour_Header = 255;

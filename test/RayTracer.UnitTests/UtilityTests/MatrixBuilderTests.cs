@@ -1,8 +1,8 @@
 ﻿using System;
-using RayTracer.Model;
+using RayTracer.Utility;
 using Xunit;
 
-namespace RayTracer.UnitTests.ModelTests
+namespace RayTracer.UnitTests.UtilityTests
 {
     public class MatrixBuilderTests
     {

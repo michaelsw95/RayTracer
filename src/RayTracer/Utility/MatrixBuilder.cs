@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using RayTracer.Model;
 
-namespace RayTracer.Model
+namespace RayTracer.Utility
 {
     public class MatrixBuilder
     {
