@@ -173,6 +173,12 @@ namespace RayTracer.Model
             return subMatrix;
         }
 
+        public float Minor(int rowToDelete, int columnToDelete)
+        {
+            return SubMatrix(rowToDelete, columnToDelete)
+                .Determinant();
+        }
+
         private float[] GetRow(int index)
         {
             var row = new float[Size];

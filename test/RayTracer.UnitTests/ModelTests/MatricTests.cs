@@ -432,5 +432,51 @@ namespace RayTracer.UnitTests.ModelTests
             Assert.Throws<IndexOutOfRangeException>(() => matrix.SubMatrix(-1, 1));
             Assert.Throws<IndexOutOfRangeException>(() => matrix.SubMatrix(1, -1));
         }
+
+        [Fact]
+        public void Matrix_Minor_ReturnsCorrectValueForA3x3Matrix()
+        {
+            // Arrange
+            var matrix = new MatrixBuilder()
+                .WithRow(3, 5, 0)
+                .WithRow(2, -1, -7)
+                .WithRow(6, -1, 5)
+                .Create();
+
+            // Act
+            var determinant = matrix.Minor(1, 0);
+
+            // Assert
+            Assert.Equal(25, determinant);
+        }
+
+        [Fact]
+        public void Matrix_Minor_ThrowsIfRowOrColumnToDeleteIsOutOfRange()
+        {
+            // Arrange
+            var matrix = new MatrixBuilder()
+                .WithRow(1, 2, 3)
+                .WithRow(4, 5, 6)
+                .WithRow(7, 8, 9)
+                .Create();
+
+            // Act / Assert
+            Assert.Throws<IndexOutOfRangeException>(() => matrix.Minor(1, 3));
+            Assert.Throws<IndexOutOfRangeException>(() => matrix.Minor(3, 1));
+            Assert.Throws<IndexOutOfRangeException>(() => matrix.Minor(-1, 1));
+            Assert.Throws<IndexOutOfRangeException>(() => matrix.Minor(1, -1));
+        }
+
+        [Fact]
+        public void Matrix_Minor_ThrowsMatrixSizeIsNot3x3()
+        {
+            // Arrange
+            var matrixOne = new Matrix(4);
+            var matrixTwo = new Matrix(2);
+
+            // Act / Assert
+            Assert.Throws<NotSupportedException>(() => matrixOne.Minor(1, 1));
+            Assert.Throws<NotSupportedException>(() => matrixTwo.Minor(1, 1));
+        }
     }
 }
