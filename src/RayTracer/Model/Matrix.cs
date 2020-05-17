@@ -125,6 +125,17 @@ namespace RayTracer.Model
             return matrix;
         }
 
+        public float Determinant()
+        {
+            if (Size != 2)
+            {
+                throw new NotSupportedException(
+                    "Determinant can only be calculated on 2x2 Matrices");
+            }
+
+            return (Get(0, 0) * Get(1, 1)) - (Get(1, 0) * Get(0, 1));
+        }
+
         private float[] GetRow(int index)
         {
             var row = new float[Size];

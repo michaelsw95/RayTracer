@@ -335,5 +335,35 @@ namespace RayTracer.UnitTests.ModelTests
 
             Assert.True(isEqual);
         }
+
+        [Fact]
+        public void Matrix_Determinant_ReturnsCorrectValueForA2x2Matrix()
+        {
+            // Arrange
+            var matrix = new MatrixBuilder()
+                .WithRow(1, 5)
+                .WithRow(-3, 2)
+                .Create();
+
+            // Act
+            var determinant = matrix.Determinant();
+
+            // Assert
+            Assert.Equal(17, determinant);
+        }
+
+        [Fact]
+        public void Matrix_Determinant_ThrowsIfMatrixIsNot2x2()
+        {
+            // Arrange
+            var matrix = new MatrixBuilder()
+                .WithRow(1, 2, 3)
+                .WithRow(4, 5, 6)
+                .WithRow(7, 8, 9)
+                .Create();
+
+            // Act / Assert
+            Assert.Throws<NotSupportedException>(() => matrix.Determinant());
+        }
     }
 }
