@@ -365,5 +365,72 @@ namespace RayTracer.UnitTests.ModelTests
             // Act / Assert
             Assert.Throws<NotSupportedException>(() => matrix.Determinant());
         }
+
+        [Fact]
+        public void Matrix_SubMatrix_ReturnsSubMatrixOfGivenMatrix3x3()
+        {
+            // Arrange
+            var matrix = new MatrixBuilder()
+                .WithRow(1, 2, 3)
+                .WithRow(4, 5, 6)
+                .WithRow(7, 8, 9)
+                .Create();
+
+            // Act
+            var subMatrix = matrix.SubMatrix(0, 2);
+
+            // Assert
+            var expected = new MatrixBuilder()
+                .WithRow(4, 5)
+                .WithRow(7, 8)
+                .Create();
+
+            var isEqual = subMatrix.IsEqual(expected);
+
+            Assert.True(isEqual);
+        }
+
+        [Fact]
+        public void Matrix_SubMatrix_ReturnsSubMatrixOfGivenMatrix4x4()
+        {
+            // Arrange
+            var matrix = new MatrixBuilder()
+                .WithRow(1, 2, 3, 4)
+                .WithRow(5, 6, 7, 8)
+                .WithRow(9, 10, 11, 12)
+                .WithRow(13, 14, 15, 16)
+                .Create();
+
+            // Act
+            var subMatrix = matrix.SubMatrix(2, 1);
+
+            // Assert
+            var expected = new MatrixBuilder()
+                .WithRow(1, 3, 4)
+                .WithRow(5, 7, 8)
+                .WithRow(13, 15, 16)
+                .Create();
+
+            var isEqual = subMatrix.IsEqual(expected);
+
+            Assert.True(isEqual);
+        }
+
+        [Fact]
+        public void Matrix_SubMatrix_ThrowsIfRowOrColumnToDeleteIsOutOfRange()
+        {
+            // Arrange
+            var matrix = new MatrixBuilder()
+                .WithRow(1, 2, 3)
+                .WithRow(4, 5, 6)
+                .WithRow(7, 8, 9)
+                .Create();
+
+            // Act / Assert
+            Assert.Throws<IndexOutOfRangeException>(() => matrix.SubMatrix(1, 3));
+            Assert.Throws<IndexOutOfRangeException>(() => matrix.SubMatrix(3, 1));
+            Assert.Throws<IndexOutOfRangeException>(() => matrix.SubMatrix(-1, 1));
+            Assert.Throws<IndexOutOfRangeException>(() => matrix.SubMatrix(1, -1));
+        }
     }
 }

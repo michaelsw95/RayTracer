@@ -136,6 +136,46 @@ namespace RayTracer.Model
             return (Get(0, 0) * Get(1, 1)) - (Get(1, 0) * Get(0, 1));
         }
 
+        public Matrix SubMatrix(int rowIndexToDelete, int columnIndexToDelete)
+        {
+            if (rowIndexToDelete < 0 || columnIndexToDelete < 0 ||
+                rowIndexToDelete >= Size || columnIndexToDelete >= Size)
+            {
+                throw new IndexOutOfRangeException();
+            }
+
+            var subMatrix = new Matrix(Size - 1);
+            var (subMatrixX, subMatrixY) = (0, 0);
+            
+            for (int i = 0; i < Size; i++)
+            {
+                if (i == rowIndexToDelete)
+                {
+                    continue;
+                }
+
+                for (int j = 0; j < Size; j++)
+                {
+                    if (j == columnIndexToDelete)
+                    {
+                        continue;
+                    }
+
+                    subMatrix.Set(
+                        Get(i, j),
+                        subMatrixX,
+                        subMatrixY);
+
+                    subMatrixY += 1;
+                }
+
+                subMatrixY = 0;
+                subMatrixX += 1;
+            }
+
+            return subMatrix;
+        }
+
         private float[] GetRow(int index)
         {
             var row = new float[Size];
