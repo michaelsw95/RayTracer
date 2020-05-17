@@ -179,6 +179,18 @@ namespace RayTracer.Model
                 .Determinant();
         }
 
+        public float Cofactor(int row, int column)
+        {
+            var minor = Minor(row, column);
+
+            if ((row + column) % 2 == 0)
+            {
+                return minor;
+            }
+
+            return minor * -1;
+        }
+
         private float[] GetRow(int index)
         {
             var row = new float[Size];

@@ -207,16 +207,14 @@ namespace RayTracer.UnitTests.ModelTests
         public void Matrix_Multiply_ThrowsIfMatrixSizeIsNotFourAndMultiplyingByTuple()
         {
             // Arrange
-            var matrix = new MatrixBuilder(4)
-                .WithRow(1, 2, 3)
-                .WithRow(5, 6, 7)
-                .WithRow(9, 10, 11)
-                .Create();
+            var matrixOne = new Matrix(3);
+            var matrixTwo = new Matrix(5);
 
             var tuple = new RayTuple(1, 2, 3, 0);
 
             // Act / Assert
-            Assert.Throws<NotSupportedException>(() => matrix.Multiply(tuple));
+            Assert.Throws<NotSupportedException>(() => matrixOne.Multiply(tuple));
+            Assert.Throws<NotSupportedException>(() => matrixTwo.Multiply(tuple));
         }
 
         [Fact]
@@ -356,11 +354,7 @@ namespace RayTracer.UnitTests.ModelTests
         public void Matrix_Determinant_ThrowsIfMatrixIsNot2x2()
         {
             // Arrange
-            var matrix = new MatrixBuilder()
-                .WithRow(1, 2, 3)
-                .WithRow(4, 5, 6)
-                .WithRow(7, 8, 9)
-                .Create();
+            var matrix = new Matrix(3);
 
             // Act / Assert
             Assert.Throws<NotSupportedException>(() => matrix.Determinant());
@@ -420,11 +414,7 @@ namespace RayTracer.UnitTests.ModelTests
         public void Matrix_SubMatrix_ThrowsIfRowOrColumnToDeleteIsOutOfRange()
         {
             // Arrange
-            var matrix = new MatrixBuilder()
-                .WithRow(1, 2, 3)
-                .WithRow(4, 5, 6)
-                .WithRow(7, 8, 9)
-                .Create();
+            var matrix = new Matrix(3);
 
             // Act / Assert
             Assert.Throws<IndexOutOfRangeException>(() => matrix.SubMatrix(1, 3));
@@ -454,11 +444,7 @@ namespace RayTracer.UnitTests.ModelTests
         public void Matrix_Minor_ThrowsIfRowOrColumnToDeleteIsOutOfRange()
         {
             // Arrange
-            var matrix = new MatrixBuilder()
-                .WithRow(1, 2, 3)
-                .WithRow(4, 5, 6)
-                .WithRow(7, 8, 9)
-                .Create();
+            var matrix = new Matrix(3);
 
             // Act / Assert
             Assert.Throws<IndexOutOfRangeException>(() => matrix.Minor(1, 3));
@@ -477,6 +463,54 @@ namespace RayTracer.UnitTests.ModelTests
             // Act / Assert
             Assert.Throws<NotSupportedException>(() => matrixOne.Minor(1, 1));
             Assert.Throws<NotSupportedException>(() => matrixTwo.Minor(1, 1));
+        }
+
+        [Fact]
+        public void Matrix_Cofactor_ReturnsCorrectValue()
+        {
+            // Arrange
+            var matrix = new MatrixBuilder()
+                .WithRow(3, 5, 0)
+                .WithRow(2, -1, -7)
+                .WithRow(6, -1, 5)
+                .Create();
+
+            // Act
+            var minorOne = matrix.Minor(0, 0);
+            var cofactorOne = matrix.Cofactor(0, 0);
+            var minorTwo = matrix.Minor(1, 0);
+            var cofactorTwo = matrix.Cofactor(1, 0);
+
+            // Assert
+            Assert.Equal(-12, minorOne);
+            Assert.Equal(-12, cofactorOne);
+            Assert.Equal(25, minorTwo);
+            Assert.Equal(-25, cofactorTwo);
+        }
+
+        [Fact]
+        public void Matrix_Cofactor_ThrowsIfRowOrColumnToDeleteIsOutOfRange()
+        {
+            // Arrange
+            var matrix = new Matrix(3);
+
+            // Act / Assert
+            Assert.Throws<IndexOutOfRangeException>(() => matrix.Cofactor(1, 3));
+            Assert.Throws<IndexOutOfRangeException>(() => matrix.Cofactor(3, 1));
+            Assert.Throws<IndexOutOfRangeException>(() => matrix.Cofactor(-1, 1));
+            Assert.Throws<IndexOutOfRangeException>(() => matrix.Cofactor(1, -1));
+        }
+
+        [Fact]
+        public void Matrix_Cofactor_ThrowsMatrixSizeIsNot3x3()
+        {
+            // Arrange
+            var matrixOne = new Matrix(4);
+            var matrixTwo = new Matrix(2);
+
+            // Act / Assert
+            Assert.Throws<NotSupportedException>(() => matrixOne.Cofactor(1, 1));
+            Assert.Throws<NotSupportedException>(() => matrixTwo.Cofactor(1, 1));
         }
     }
 }
