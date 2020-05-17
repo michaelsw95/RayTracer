@@ -16,7 +16,8 @@ namespace RayTracer.Model
 
         public Colour GetPixel(int xPosition, int yPosition)
         {
-            if (!WidthIsWithinRange(xPosition) || !HeightIsWithinRange(yPosition))
+            if (!Numeric.IsWithinRange(0, Width - 1, xPosition) ||
+                !Numeric.IsWithinRange(0, Height - 1, yPosition))
             {
                 throw new IndexOutOfRangeException();
             }
@@ -28,7 +29,8 @@ namespace RayTracer.Model
 
         public void SetPixel(Colour colour, int xPosition, int yPosition)
         {
-            if (!WidthIsWithinRange(xPosition) || !HeightIsWithinRange(yPosition))
+            if (!Numeric.IsWithinRange(0, Width - 1, xPosition) ||
+                !Numeric.IsWithinRange(0, Height - 1, yPosition))
             {
                 throw new IndexOutOfRangeException();
             }
@@ -74,9 +76,6 @@ namespace RayTracer.Model
                 }
             }
         }
-
-        private bool WidthIsWithinRange(int width) => width <= (Width - 1) & width >= 0;
-        private bool HeightIsWithinRange(int height) => height <= (Height - 1) & height >= 0;
 
         private StringBuilder AddHeaderLinesForPPM(StringBuilder stringBuilder)
         {

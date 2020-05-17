@@ -30,14 +30,11 @@ namespace RayTracer.Model
                 return false;
             }
 
-            for (int i = 0; i < Size; i++)
+            for (int i = 0; i < Size * Size; i++)
             {
-                for (int j = 0; j < Size; j++)
+                if (!Numeric.FloatIsEqual(_matrix[i], other._matrix[i]))
                 {
-                    if (!Numeric.FloatIsEqual(Get(i, j), other.Get(i, j)))
-                    {
-                        return false;
-                    }
+                    return false;
                 }
             }
 
@@ -138,15 +135,15 @@ namespace RayTracer.Model
 
         public Matrix SubMatrix(int rowIndexToDelete, int columnIndexToDelete)
         {
-            if (rowIndexToDelete < 0 || columnIndexToDelete < 0 ||
-                rowIndexToDelete >= Size || columnIndexToDelete >= Size)
+            if (!Numeric.IsWithinRange(0, Size - 1, rowIndexToDelete) ||
+                !Numeric.IsWithinRange(0, Size - 1, columnIndexToDelete))
             {
                 throw new IndexOutOfRangeException();
             }
 
             var subMatrix = new Matrix(Size - 1);
             var (subMatrixX, subMatrixY) = (0, 0);
-            
+
             for (int i = 0; i < Size; i++)
             {
                 if (i == rowIndexToDelete)

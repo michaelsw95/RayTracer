@@ -130,7 +130,7 @@ namespace RayTracer.UnitTests.UtilityTests
 
             // Assert
             var matrix = builder.Create();
-            
+
             Assert.Equal(0, matrix.Size);
         }
     }

@@ -52,7 +52,7 @@ namespace RayTracer.UnitTests.ModelTests
 
             // Act
             var isEqual = tupleOne.IsEqual(tupleTwo);
-            
+
             // Assert
             Assert.True(isEqual);
         }

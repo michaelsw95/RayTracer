@@ -24,5 +24,15 @@ namespace RayTracer.Utility
 
             return value;
         }
+
+        public static bool IsWithinRange<T>(T lower, T higher, T value) where T : IComparable
+        {
+            if (value.CompareTo(higher) > 0 || value.CompareTo(lower) < 0)
+            {
+                return false;
+            }
+
+            return true;
+        }
     }
 }

@@ -14,7 +14,7 @@
         public Colour Add(Colour other)
         {
             var newBackingTuple = _backingTuple.Add(other._backingTuple);
-            
+
             return new Colour(
                 newBackingTuple.X,
                 newBackingTuple.Y,

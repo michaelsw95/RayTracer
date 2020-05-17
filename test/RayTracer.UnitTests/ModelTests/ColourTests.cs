@@ -12,7 +12,7 @@ namespace RayTracer.UnitTests.ModelTests
         {
             _fixture = new Fixture();
         }
-        
+
         [Fact]
         public void Colour_CanSetRedGreenAndBlueAttributes()
         {
