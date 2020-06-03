@@ -351,13 +351,64 @@ namespace RayTracer.UnitTests.ModelTests
         }
 
         [Fact]
-        public void Matrix_Determinant_ThrowsIfMatrixIsNot2x2()
+        public void Matrix_Determinant_ReturnsCorrectValueForA3x3Matrix()
         {
             // Arrange
-            var matrix = new Matrix(3);
+            var matrix = new MatrixBuilder()
+                .WithRow(1, 2, 6)
+                .WithRow(-5, 8, -4)
+                .WithRow(2, 6, 4)
+                .Create();
+
+            // Act
+            var cofactorOne = matrix.Cofactor(0, 0);
+            var cofactorTwo = matrix.Cofactor(0, 1);
+            var cofactorThree = matrix.Cofactor(0, 2);
+            var determinant = matrix.Determinant();
+
+            // Assert
+            Assert.Equal(56, cofactorOne);
+            Assert.Equal(12, cofactorTwo);
+            Assert.Equal(-46, cofactorThree);
+            Assert.Equal(-196, determinant);
+        }
+
+        [Fact]
+        public void Matrix_Determinant_ReturnsCorrectValueForA4x4Matrix()
+        {
+            // Arrange
+            var matrix = new MatrixBuilder()
+                .WithRow(-2, -8, 3, 5)
+                .WithRow(-3, 1, 7, 3)
+                .WithRow(1, 2, -9, 6)
+                .WithRow(-6, 7, 7, -9)
+                .Create();
+
+            // Act
+            var cofactorOne = matrix.Cofactor(0, 0);
+            var cofactorTwo = matrix.Cofactor(0, 1);
+            var cofactorThree = matrix.Cofactor(0, 2);
+            var cofactorFour = matrix.Cofactor(0, 3);
+            var determinant = matrix.Determinant();
+
+            // Assert
+            Assert.Equal(690, cofactorOne);
+            Assert.Equal(447, cofactorTwo);
+            Assert.Equal(210, cofactorThree);
+            Assert.Equal(51, cofactorFour);
+            Assert.Equal(-4071, determinant);
+        }
+
+        [Fact]
+        public void Matrix_Determinant_ThrowsIfMatrixIsNot2x2Or3x3or4x4()
+        {
+            // Arrange
+            var matrixOne = new Matrix(1);
+            var matrixTwo = new Matrix(5);
 
             // Act / Assert
-            Assert.Throws<NotSupportedException>(() => matrix.Determinant());
+            Assert.Throws<NotSupportedException>(() => matrixOne.Determinant());
+            Assert.Throws<NotSupportedException>(() => matrixTwo.Determinant());
         }
 
         [Fact]
@@ -454,18 +505,6 @@ namespace RayTracer.UnitTests.ModelTests
         }
 
         [Fact]
-        public void Matrix_Minor_ThrowsMatrixSizeIsNot3x3()
-        {
-            // Arrange
-            var matrixOne = new Matrix(4);
-            var matrixTwo = new Matrix(2);
-
-            // Act / Assert
-            Assert.Throws<NotSupportedException>(() => matrixOne.Minor(1, 1));
-            Assert.Throws<NotSupportedException>(() => matrixTwo.Minor(1, 1));
-        }
-
-        [Fact]
         public void Matrix_Cofactor_ReturnsCorrectValue()
         {
             // Arrange
@@ -499,18 +538,6 @@ namespace RayTracer.UnitTests.ModelTests
             Assert.Throws<IndexOutOfRangeException>(() => matrix.Cofactor(3, 1));
             Assert.Throws<IndexOutOfRangeException>(() => matrix.Cofactor(-1, 1));
             Assert.Throws<IndexOutOfRangeException>(() => matrix.Cofactor(1, -1));
-        }
-
-        [Fact]
-        public void Matrix_Cofactor_ThrowsMatrixSizeIsNot3x3()
-        {
-            // Arrange
-            var matrixOne = new Matrix(4);
-            var matrixTwo = new Matrix(2);
-
-            // Act / Assert
-            Assert.Throws<NotSupportedException>(() => matrixOne.Cofactor(1, 1));
-            Assert.Throws<NotSupportedException>(() => matrixTwo.Cofactor(1, 1));
         }
     }
 }

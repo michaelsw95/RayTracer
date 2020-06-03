@@ -124,13 +124,24 @@ namespace RayTracer.Model
 
         public float Determinant()
         {
-            if (Size != 2)
+            if (Size == 2)
             {
-                throw new NotSupportedException(
-                    "Determinant can only be calculated on 2x2 Matrices");
+                return (Get(0, 0) * Get(1, 1)) - (Get(1, 0) * Get(0, 1));
+            }
+            else if (Numeric.IsWithinRange(2, 4, Size))
+            {
+                var determinant = 0F;
+
+                for (var i = 0; i < Size; i++)
+                {
+                    determinant += Get(0, i) * Cofactor(0, i);
+                }
+
+                return determinant;
             }
 
-            return (Get(0, 0) * Get(1, 1)) - (Get(1, 0) * Get(0, 1));
+            throw new NotSupportedException(
+                    "Determinant can only be calculated on 2x2, 3x3 or 4x4 Matrices");
         }
 
         public Matrix SubMatrix(int rowIndexToDelete, int columnIndexToDelete)
