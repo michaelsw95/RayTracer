@@ -539,5 +539,53 @@ namespace RayTracer.UnitTests.ModelTests
             Assert.Throws<IndexOutOfRangeException>(() => matrix.Cofactor(-1, 1));
             Assert.Throws<IndexOutOfRangeException>(() => matrix.Cofactor(1, -1));
         }
+
+        [Fact]
+        public void Matrix_Inverse_ThrowsIfDeterminantIsZero()
+        {
+            // Arrange
+            var matrix = new MatrixBuilder()
+                .WithRow(-4, 2, -2, -3)
+                .WithRow(9, 6, 2, 6)
+                .WithRow(0, -5, 1, 5)
+                .WithRow(0, 0, 0, 0)
+                .Create();
+
+            // Act / Assert
+            Assert.Equal(0, matrix.Determinant());
+            Assert.Throws<NotSupportedException>(() => matrix.Inverse());
+        }
+
+        [Fact]
+        public void Matrix_Inverse_ReturnsTheCorrectValue()
+        {
+            // Arrange
+            var matrix = new MatrixBuilder()
+                .WithRow(-5, 2, 6, -8)
+                .WithRow(1, -5, 1, 8)
+                .WithRow(7, 7, -6, -7)
+                .WithRow(1, -3, 7, 4)
+                .Create();
+
+            // Act
+            var inverseMatrix = matrix.Inverse();
+
+            // Assert
+            var expected = new MatrixBuilder()
+                .WithRow(0.21805F, 0.45113F, 0.24060F, -0.04511F)
+                .WithRow(-0.80827F, -1.45677F, -0.44361F, 0.52068F)
+                .WithRow(-0.07895F, -0.22368F, -0.05263F, 0.19737F)
+                .WithRow(-0.52256F, -0.81391F, -0.30075F, 0.30639F)
+                .Create();
+
+            var isEqual = inverseMatrix.IsEqual(expected);
+
+            Assert.True(isEqual);
+            Assert.Equal(532, matrix.Determinant());
+            Assert.Equal(-160, matrix.Cofactor(2, 3));
+            Assert.Equal(105, matrix.Cofactor(3, 2));
+            Assert.Equal(-160F / 532F, inverseMatrix.Get(3, 2));
+            Assert.Equal(105F / 532F, inverseMatrix.Get(2, 3));
+        }
     }
 }
