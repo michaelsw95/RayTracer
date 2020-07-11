@@ -557,7 +557,7 @@ namespace RayTracer.UnitTests.ModelTests
         }
 
         [Fact]
-        public void Matrix_Inverse_ReturnsTheCorrectValue()
+        public void Matrix_Inverse_ReturnsTheCorrectInvertedMatrix()
         {
             // Arrange
             var matrix = new MatrixBuilder()
@@ -587,5 +587,50 @@ namespace RayTracer.UnitTests.ModelTests
             Assert.Equal(-160F / 532F, inverseMatrix.Get(3, 2));
             Assert.Equal(105F / 532F, inverseMatrix.Get(2, 3));
         }
+
+        [Fact]
+        public void Matrix_Inverse_ReturnsTheCorrectValues()
+        {
+            // Arrange
+            var matrixOne = new MatrixBuilder()
+                .WithRow(8, -5, 9, 2)
+                .WithRow(7, 5, 6, 1)
+                .WithRow(-6, 0, 9, 6)
+                .WithRow(-3, 0, -9, -4)
+                .Create();
+
+            var matrixTwo = new MatrixBuilder()
+                .WithRow(9, 3, 0, 9)
+                .WithRow(-5, -2, -6, -3)
+                .WithRow(-4, 9, 6, 4)
+                .WithRow(-7, 6, 6, 2)
+                .Create();
+
+            // Act
+            var inverseMatrixOne = matrixOne.Inverse();
+            var inverseMatrixTwo = matrixTwo.Inverse();
+
+            // Assert
+            var expectedOne = new MatrixBuilder()
+                .WithRow(-0.15385F, -0.15385F, -0.28205F, -0.53846F)
+                .WithRow(-0.07692F, 0.12308F, 0.02564F, 0.03077F)
+                .WithRow(0.35897F, 0.35897F, 0.43590F, 0.92308F)
+                .WithRow(-0.69231F, -0.69231F, -0.76923F, -1.92308F)
+                .Create();
+
+            var expectedTwo = new MatrixBuilder()
+                .WithRow(-0.04074F, -0.07778F, 0.14444F, -0.22222F)
+                .WithRow(-0.07778F, 0.03333F, 0.36667F, -0.33333F)
+                .WithRow(-0.02901F, -0.14630F, -0.10926F, 0.12963F)
+                .WithRow(0.17778F, 0.06667F, -0.26667F, 0.33333F)
+                .Create();
+
+            var isEqualOne = inverseMatrixOne.IsEqual(expectedOne);
+            var isEqualTwo = inverseMatrixTwo.IsEqual(expectedTwo);
+
+            Assert.True(isEqualOne);
+            Assert.True(isEqualTwo);
+        }
+
     }
 }
