@@ -632,5 +632,33 @@ namespace RayTracer.UnitTests.ModelTests
             Assert.True(isEqualTwo);
         }
 
+        [Fact]
+        public void Matrix_MultiplyProductByInverse_ReturnsOriginalMatrix()
+        {
+            // Arrange
+            var matrixOne = new MatrixBuilder()
+                .WithRow(3, -9, 7, 3)
+                .WithRow(3, -8, 2, -9)
+                .WithRow(-4, 4, 4, 1)
+                .WithRow(-6, 5, -1, 1)
+                .Create();
+
+            var matrixTwo = new MatrixBuilder()
+                .WithRow(8, 2, 2, 2)
+                .WithRow(3, -1, 7, 0)
+                .WithRow(7, 0, 5, 4)
+                .WithRow(6, -2, 0, 5)
+                .Create();
+
+            // Act
+            var multipliedInverseMatrix = matrixOne
+                .Multiply(matrixTwo)
+                .Multiply(matrixTwo.Inverse());
+
+            // Assert
+            var isEqual = matrixOne.IsEqual(multipliedInverseMatrix);
+
+            Assert.True(isEqual);
+        }
     }
 }
