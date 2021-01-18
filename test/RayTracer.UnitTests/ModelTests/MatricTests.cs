@@ -741,5 +741,25 @@ namespace RayTracer.UnitTests.ModelTests
             
             Assert.True(isEqual);
         }
+
+        [Fact]
+        public void Matrix_CanBeReflectedUsingScailing()
+        {
+            // Arrange
+            var reflection = new MatrixBuilder()
+                .AsScailingMatrix(-1, 1, 1)
+                .Create();
+            
+            var point = new RayPoint(2, 3, 4);
+
+            // Act
+            var reflected = reflection.Multiply(point);
+
+            // Assert
+            var expected = new RayPoint(-2, 3, 4);
+            var isEqual = expected.IsEqual(reflected);
+
+            Assert.True(isEqual);
+        }
     }
 }
