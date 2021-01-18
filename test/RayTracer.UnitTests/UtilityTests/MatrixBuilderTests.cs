@@ -1,4 +1,5 @@
 ﻿using System;
+using RayTracer.Model;
 using RayTracer.Utility;
 using Xunit;
 
@@ -62,6 +63,19 @@ namespace RayTracer.UnitTests.UtilityTests
 
             // Act
             builder.AsIdentityMatrix(4);
+
+            // Assert
+            Assert.Throws<NotSupportedException>(() => builder.WithRow(10, 11));
+        }
+
+        [Fact]
+        public void MatrixBuilder_WithRow_ThrowsIfBuildingAnTranslationMatrix()
+        {
+            // Arrange
+            var builder = new MatrixBuilder();
+
+            // Act
+            builder.AsTranslationMatrix(1, 2, 3);
 
             // Assert
             Assert.Throws<NotSupportedException>(() => builder.WithRow(10, 11));
@@ -132,6 +146,37 @@ namespace RayTracer.UnitTests.UtilityTests
             var matrix = builder.Create();
 
             Assert.Equal(0, matrix.Size);
+        }
+
+        [Fact]
+        public void MatrixBuilder_CanConstructTranslationMatrix()
+        {
+            // Arrange
+            var point = new RayPoint(-3, 4, 5);
+
+            // Act
+            var transform = new MatrixBuilder()
+                .AsTranslationMatrix(5, -3, 2)
+                .Create();
+
+            // Assert
+            var expected = new RayPoint(2, 1, 7);
+            var isEqual = expected.IsEqual(transform.Multiply(point)); 
+
+            Assert.True(isEqual);
+        }
+
+        [Fact]
+        public void MatrixBuilder_AsTranslationMatrix_ThrowsIfRowsHaveBeenAdded()
+        {
+            // Arrange
+            var builder = new MatrixBuilder();
+
+            // Act
+            builder.WithRow(1, 2, 3);
+
+            // Assert
+            Assert.Throws<NotSupportedException>(() => builder.AsTranslationMatrix(1, 2, 3));
         }
     }
 }

@@ -18,10 +18,10 @@ namespace RayTracer.Utility
 
         public MatrixBuilder WithRow(params float[] values)
         {
-            if (_isBuildingIdentityMatrix)
+            if (_isBuildingIdentityMatrix || _isBuildingTranslationMatrix)
             {
                 throw new NotSupportedException(
-                    "Cannot add rows to an Identity Matrix");
+                    "Cannot add rows to this Matrix");
             }
             else if (_expectedSize.HasValue && values.Length != _expectedSize)
             {
@@ -51,11 +51,32 @@ namespace RayTracer.Utility
             return this;
         }
 
+        public MatrixBuilder AsTranslationMatrix(int x, int y, int z)
+        {
+            const int translationMatrixSize = 4;
+
+            if (_expectedSize.HasValue)
+            {
+                throw new NotSupportedException(
+                    "Translation Matrices cannot be constructed if rows have already been added");
+            }
+
+            _isBuildingTranslationMatrix = true;
+            _expectedSize = translationMatrixSize;
+            _translation = (x, y, z);
+
+            return this;
+        }
+
         public Matrix Create()
         {
             if (_isBuildingIdentityMatrix)
             {
                 return BuildIdentiyMatrix(_expectedSize.Value);
+            }
+            else if (_isBuildingTranslationMatrix)
+            {
+                return BuildTranslationMatrix(_translation);
             }
             else if (!_expectedSize.HasValue)
             {
@@ -100,8 +121,21 @@ namespace RayTracer.Utility
             return matrix;
         }
 
+        private Matrix BuildTranslationMatrix((int x, int y, int z) translation)
+        {
+            var matrix = BuildIdentiyMatrix(4);
+
+            matrix.Set(translation.x, 0, 3);
+            matrix.Set(translation.y, 1, 3);
+            matrix.Set(translation.z, 2, 3);
+
+            return matrix;
+        }
+
         private readonly List<float[]> _data;
         private int? _expectedSize;
         private bool _isBuildingIdentityMatrix;
+        private bool _isBuildingTranslationMatrix;
+        private (int x, int y, int z) _translation;
     }
 }

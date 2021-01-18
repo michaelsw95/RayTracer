@@ -660,5 +660,44 @@ namespace RayTracer.UnitTests.ModelTests
 
             Assert.True(isEqual);
         }
+
+        [Fact]
+        public void Matrix_TranslationMatrices_DoNotAffectVectors()
+        {
+            // Arrange
+            var vector = new RayVector(-3, 4, 5);
+
+            // Act
+            var transform = new MatrixBuilder()
+                .AsTranslationMatrix(5, -3, 2)
+                .Create();
+
+            var translated = transform.Multiply(vector);
+
+            // Assert
+            Assert.True(vector.IsEqual(translated));
+        }
+
+        [Fact]
+        public void Matrix_TranslationMatrices_AreInvertable()
+        {
+            // Arrange
+            var point = new RayPoint(-3, 4, 5);
+
+            var transform = new MatrixBuilder()
+                .AsTranslationMatrix(5, -3, 2)
+                .Create();
+
+            // Act
+            var invertedTransform = transform.Inverse();
+
+            var transformed = invertedTransform.Multiply(point);
+
+            // Assert
+            var expected = new RayPoint(-8, 7, 3);
+            var isEqual = expected.IsEqual(transformed); 
+            
+            Assert.True(isEqual);
+        }
     }
 }
