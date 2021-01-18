@@ -82,6 +82,19 @@ namespace RayTracer.UnitTests.UtilityTests
         }
 
         [Fact]
+        public void MatrixBuilder_WithRow_ThrowsIfBuildingAnScailingMatrix()
+        {
+            // Arrange
+            var builder = new MatrixBuilder();
+
+            // Act
+            builder.AsScailingMatrix(1, 2, 3);
+
+            // Assert
+            Assert.Throws<NotSupportedException>(() => builder.WithRow(10, 11));
+        }
+
+        [Fact]
         public void MatrixBuilder_Create_ThrowsIfMatrixIsNotSquare()
         {
             // Arrange
@@ -177,6 +190,39 @@ namespace RayTracer.UnitTests.UtilityTests
 
             // Assert
             Assert.Throws<NotSupportedException>(() => builder.AsTranslationMatrix(1, 2, 3));
+        }
+
+        [Fact]
+        public void MatrixBuilder_CanConstructScailingMatrix()
+        {
+            // Arrange
+            var point = new RayPoint(-4, 6, 8);
+
+            var transform = new MatrixBuilder()
+                .AsScailingMatrix(2, 3, 4)
+                .Create();
+
+            // Act
+            var scailed = transform.Multiply(point);
+
+            // Assert
+            var expected = new RayPoint(-8, 18, 32);
+            var isEqual = expected.IsEqual(scailed);
+
+            Assert.True(isEqual);
+        }
+
+        [Fact]
+        public void MatrixBuilder_AsScailingMatrix_ThrowsIfRowsHaveBeenAdded()
+        {
+            // Arrange
+            var builder = new MatrixBuilder();
+
+            // Act
+            builder.WithRow(1, 2, 3);
+
+            // Assert
+            Assert.Throws<NotSupportedException>(() => builder.AsScailingMatrix(1, 2, 3));
         }
     }
 }

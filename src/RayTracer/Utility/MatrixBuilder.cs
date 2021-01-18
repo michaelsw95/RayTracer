@@ -18,7 +18,7 @@ namespace RayTracer.Utility
 
         public MatrixBuilder WithRow(params float[] values)
         {
-            if (_isBuildingIdentityMatrix || _isBuildingTranslationMatrix)
+            if (_isBuildingIdentityMatrix || _isBuildingTranslationMatrix || _isBuildingScailingMatrix)
             {
                 throw new NotSupportedException(
                     "Cannot add rows to this Matrix");
@@ -63,7 +63,24 @@ namespace RayTracer.Utility
 
             _isBuildingTranslationMatrix = true;
             _expectedSize = translationMatrixSize;
-            _translation = (x, y, z);
+            _transform = (x, y, z);
+
+            return this;
+        }
+
+        public MatrixBuilder AsScailingMatrix(int x, int y, int z)
+        {
+            const int scailingMatrixSize = 4;
+
+            if (_expectedSize.HasValue)
+            {
+                throw new NotSupportedException(
+                    "Scailing Matrices cannot be constructed if rows have already been added");
+            }
+
+            _isBuildingScailingMatrix = true;
+            _expectedSize = scailingMatrixSize;
+            _transform = (x, y, z);
 
             return this;
         }
@@ -76,7 +93,11 @@ namespace RayTracer.Utility
             }
             else if (_isBuildingTranslationMatrix)
             {
-                return BuildTranslationMatrix(_translation);
+                return BuildTranslationMatrix(_transform);
+            }
+            else if (_isBuildingScailingMatrix)
+            {
+                return BuildScailingMatrix(_transform);
             }
             else if (!_expectedSize.HasValue)
             {
@@ -132,10 +153,22 @@ namespace RayTracer.Utility
             return matrix;
         }
 
+        private Matrix BuildScailingMatrix((int x, int y, int z) transform)
+        {
+            var matrix = BuildIdentiyMatrix(4);
+
+            matrix.Set(transform.x, 0, 0);
+            matrix.Set(transform.y, 1, 1);
+            matrix.Set(transform.z, 2, 2);
+
+            return matrix;
+        }
+
         private readonly List<float[]> _data;
         private int? _expectedSize;
         private bool _isBuildingIdentityMatrix;
         private bool _isBuildingTranslationMatrix;
-        private (int x, int y, int z) _translation;
+        private bool _isBuildingScailingMatrix;
+        private (int x, int y, int z) _transform;
     }
 }

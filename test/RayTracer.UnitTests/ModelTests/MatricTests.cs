@@ -699,5 +699,47 @@ namespace RayTracer.UnitTests.ModelTests
             
             Assert.True(isEqual);
         }
+
+        [Fact]
+        public void Matrix_ScailingMatrices_DoApplyToVectors()
+        {
+            // Arrange
+            var vector = new RayVector(-4, 6, 8);
+
+            // Act
+            var transform = new MatrixBuilder()
+                .AsScailingMatrix(2, 3, 4)
+                .Create();
+
+            var scailed = transform.Multiply(vector);
+
+            // Assert
+            var expected = new RayVector(-8, 18, 32);
+            var isEqual = scailed.IsEqual(expected);
+
+            Assert.True(isEqual);
+        }
+
+        [Fact]
+        public void Matrix_ScailingMatrices_AreInvertable()
+        {
+            // Arrange
+            var vector = new RayVector(-4, 6, 8);
+
+            var scail = new MatrixBuilder()
+                .AsScailingMatrix(2, 3, 4)
+                .Create();
+
+            // Act
+            var invertedScail = scail.Inverse();
+
+            var transformed = invertedScail.Multiply(vector);
+
+            // Assert
+            var expected = new RayVector(-2, 2, 2);
+            var isEqual = expected.IsEqual(transformed); 
+            
+            Assert.True(isEqual);
+        }
     }
 }
