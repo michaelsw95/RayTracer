@@ -761,5 +761,26 @@ namespace RayTracer.UnitTests.ModelTests
 
             Assert.True(isEqual);
         }
+
+        [Fact]
+        public void Matrix_Rotation_Matrices_AreInvertable()
+        {
+            // Arrange
+            var point = new RayPoint(0, 1, 0);
+
+            var halfQuarter = new MatrixBuilder()
+                .AsRotationMatrix(RotationAxis.X, (float)Math.PI / 4)
+                .Create();
+
+            // Act
+            var invertedPoint = halfQuarter.Inverse().Multiply(point);
+
+            // Assert
+            var expected = new RayPoint(0, (float)Math.Sqrt(2) / 2, -(float)Math.Sqrt(2) / 2);
+            
+            var isEqual = invertedPoint.IsEqual(expected);
+
+            Assert.True(isEqual);
+        }
     }
 }

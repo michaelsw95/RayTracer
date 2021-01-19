@@ -95,6 +95,19 @@ namespace RayTracer.UnitTests.UtilityTests
         }
 
         [Fact]
+        public void MatrixBuilder_WithRow_ThrowsIfBuildingAnRotationMatrix()
+        {
+            // Arrange
+            var builder = new MatrixBuilder();
+
+            // Act
+            builder.AsRotationMatrix(RotationAxis.X, 0);
+
+            // Assert
+            Assert.Throws<NotSupportedException>(() => builder.WithRow(10, 11));
+        }
+
+        [Fact]
         public void MatrixBuilder_Create_ThrowsIfMatrixIsNotSquare()
         {
             // Arrange
@@ -223,6 +236,103 @@ namespace RayTracer.UnitTests.UtilityTests
 
             // Assert
             Assert.Throws<NotSupportedException>(() => builder.AsScailingMatrix(1, 2, 3));
+        }
+
+        [Fact]
+        public void MatrixBuilder_CanConstruct_X_RotationMatrix()
+        {
+            // Arrange
+            var point = new RayPoint(0, 1, 0);
+
+            // Act
+            var halfQuarter = new MatrixBuilder()
+                .AsRotationMatrix(RotationAxis.X, (float)Math.PI / 4)
+                .Create()
+                .Multiply(point);
+
+            var fullQuarter = new MatrixBuilder()
+                .AsRotationMatrix(RotationAxis.X, (float)Math.PI / 2)
+                .Create()
+                .Multiply(point);
+
+            // Assert
+            var expectedHalf = new RayPoint(0, (float)Math.Sqrt(2) / 2, (float)Math.Sqrt(2) / 2);
+            var expectedFull = new RayPoint(0, 0, 1);
+
+            var halfIsEqual = halfQuarter.IsEqual(expectedHalf);
+            var fullIsEqual = fullQuarter.IsEqual(expectedFull);
+
+            Assert.True(halfIsEqual);
+            Assert.True(fullIsEqual);        
+        }
+
+        [Fact]
+        public void MatrixBuilder_AsRotationMatrix_ThrowsIfRowsHaveBeenAdded()
+        {
+            // Arrange
+            var builder = new MatrixBuilder();
+
+            // Act
+            builder.WithRow(1, 2, 3);
+
+            // Assert
+            Assert.Throws<NotSupportedException>(() => builder.AsRotationMatrix(RotationAxis.X, 1));
+        }
+
+        [Fact]
+        public void MatrixBuilder_CanConstruct_Y_RotationMatrix()
+        {
+            // Arrange
+            var point = new RayPoint(0, 0, 1);
+
+            // Act
+            var halfQuarter = new MatrixBuilder()
+                .AsRotationMatrix(RotationAxis.Y, (float)Math.PI / 4)
+                .Create()
+                .Multiply(point);
+
+            var fullQuarter = new MatrixBuilder()
+                .AsRotationMatrix(RotationAxis.Y, (float)Math.PI / 2)
+                .Create()
+                .Multiply(point);
+
+            // Assert
+            var expectedHalf = new RayPoint((float)Math.Sqrt(2) / 2, 0, (float)Math.Sqrt(2) / 2);
+            var expectedFull = new RayPoint(1, 0, 0);
+
+            var halfIsEqual = halfQuarter.IsEqual(expectedHalf);
+            var fullIsEqual = fullQuarter.IsEqual(expectedFull);
+
+            Assert.True(halfIsEqual);
+            Assert.True(fullIsEqual);
+        }
+
+        [Fact]
+        public void MatrixBuilder_CanConstruct_Z_RotationMatrix()
+        {
+            // Arrange
+            var point = new RayPoint(0, 1, 0);
+
+            // Act
+            var halfQuarter = new MatrixBuilder()
+                .AsRotationMatrix(RotationAxis.Z, (float)Math.PI / 4)
+                .Create()
+                .Multiply(point);
+
+            var fullQuarter = new MatrixBuilder()
+                .AsRotationMatrix(RotationAxis.Z, (float)Math.PI / 2)
+                .Create()
+                .Multiply(point);
+
+            // Assert
+            var expectedHalf = new RayPoint(-(float)Math.Sqrt(2) / 2, (float)Math.Sqrt(2) / 2, 0);
+            var expectedFull = new RayPoint(-1, 0, 0);
+
+            var halfIsEqual = halfQuarter.IsEqual(expectedHalf);
+            var fullIsEqual = fullQuarter.IsEqual(expectedFull);
+
+            Assert.True(halfIsEqual);
+            Assert.True(fullIsEqual);
         }
     }
 }

@@ -18,7 +18,7 @@ namespace RayTracer.Utility
 
         public MatrixBuilder WithRow(params float[] values)
         {
-            if (_isBuildingIdentityMatrix || _isBuildingTranslationMatrix || _isBuildingScailingMatrix)
+            if (_isBuildingIdentityMatrix || _isBuildingTranslationMatrix || _isBuildingScailingMatrix || _isBuildingRotationMatrix)
             {
                 throw new NotSupportedException(
                     "Cannot add rows to this Matrix");
@@ -85,6 +85,24 @@ namespace RayTracer.Utility
             return this;
         }
 
+        public MatrixBuilder AsRotationMatrix(RotationAxis axis, float radians)
+        {
+            const int rotationMatrixSize = 4;
+
+            if (_expectedSize.HasValue)
+            {
+                throw new NotSupportedException(
+                    "Rotation Matrices cannot be constructed if rows have already been added");
+            }
+
+            _isBuildingRotationMatrix = true;
+            _rotationRadians = radians;
+            _expectedSize = rotationMatrixSize;
+            _rotation = axis;
+
+            return this;
+        }
+
         public Matrix Create()
         {
             if (_isBuildingIdentityMatrix)
@@ -93,11 +111,15 @@ namespace RayTracer.Utility
             }
             else if (_isBuildingTranslationMatrix)
             {
-                return BuildTranslationMatrix(_transform);
+                return BuildTranslationMatrix(_transform, _expectedSize.Value);
             }
             else if (_isBuildingScailingMatrix)
             {
-                return BuildScailingMatrix(_transform);
+                return BuildScailingMatrix(_transform, _expectedSize.Value);
+            }
+            else if (_isBuildingRotationMatrix)
+            {
+                return BuildRotationMatrix(_rotation, _rotationRadians, _expectedSize.Value);
             }
             else if (!_expectedSize.HasValue)
             {
@@ -142,9 +164,9 @@ namespace RayTracer.Utility
             return matrix;
         }
 
-        private Matrix BuildTranslationMatrix((int x, int y, int z) translation)
+        private Matrix BuildTranslationMatrix((int x, int y, int z) translation, int size)
         {
-            var matrix = BuildIdentiyMatrix(4);
+            var matrix = BuildIdentiyMatrix(size);
 
             matrix.Set(translation.x, 0, 3);
             matrix.Set(translation.y, 1, 3);
@@ -153,13 +175,42 @@ namespace RayTracer.Utility
             return matrix;
         }
 
-        private Matrix BuildScailingMatrix((int x, int y, int z) transform)
+        private Matrix BuildScailingMatrix((int x, int y, int z) transform, int size)
         {
-            var matrix = BuildIdentiyMatrix(4);
+            var matrix = BuildIdentiyMatrix(size);
 
             matrix.Set(transform.x, 0, 0);
             matrix.Set(transform.y, 1, 1);
             matrix.Set(transform.z, 2, 2);
+
+            return matrix;
+        }
+
+        private Matrix BuildRotationMatrix(RotationAxis rotation, float rotationRadians, int size)
+        {
+            var matrix = BuildIdentiyMatrix(size);
+
+            if (rotation == RotationAxis.X)
+            {
+                matrix.Set((float)Math.Cos(rotationRadians), 1, 1);
+                matrix.Set(-((float)Math.Sin(rotationRadians)), 1, 2);
+                matrix.Set((float)Math.Sin(rotationRadians), 2, 1);
+                matrix.Set((float)Math.Cos(rotationRadians), 2, 2);
+            }
+            else if (rotation == RotationAxis.Y)
+            {
+                matrix.Set((float)Math.Cos(rotationRadians), 0, 0);
+                matrix.Set((float)Math.Sin(rotationRadians), 0, 2);
+                matrix.Set(-((float)Math.Sin(rotationRadians)), 2, 0);
+                matrix.Set((float)Math.Cos(rotationRadians), 2, 2);
+            }
+            else if (rotation == RotationAxis.Z)
+            {
+                matrix.Set((float)Math.Cos(rotationRadians), 0, 0);
+                matrix.Set(-((float)Math.Sin(rotationRadians)), 0, 1);
+                matrix.Set((float)Math.Sin(rotationRadians), 1, 0);
+                matrix.Set((float)Math.Cos(rotationRadians), 1, 1);
+            }
 
             return matrix;
         }
@@ -170,5 +221,8 @@ namespace RayTracer.Utility
         private bool _isBuildingTranslationMatrix;
         private bool _isBuildingScailingMatrix;
         private (int x, int y, int z) _transform;
+        private bool _isBuildingRotationMatrix;
+        private float _rotationRadians;
+        private RotationAxis _rotation;
     }
 }
