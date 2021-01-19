@@ -1,4 +1,4 @@
-namespace RayTracer.Utility
+namespace RayTracer.Utility.Model
 {
     public enum RotationAxis
     {

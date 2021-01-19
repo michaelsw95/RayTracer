@@ -1,12 +1,21 @@
 ﻿using System;
+using AutoFixture;
 using RayTracer.Model;
 using RayTracer.Utility;
+using RayTracer.Utility.Model;
 using Xunit;
 
 namespace RayTracer.UnitTests.UtilityTests
 {
     public class MatrixBuilderTests
     {
+        private Fixture _fixture;
+
+        public MatrixBuilderTests()
+        {
+            _fixture = new Fixture();
+        }
+
         [Fact]
         public void MatrixBuilder_CanConstructEmptyMatrix()
         {
@@ -102,6 +111,20 @@ namespace RayTracer.UnitTests.UtilityTests
 
             // Act
             builder.AsRotationMatrix(RotationAxis.X, 0);
+
+            // Assert
+            Assert.Throws<NotSupportedException>(() => builder.WithRow(10, 11));
+        }
+
+        [Fact]
+        public void MatrixBuilder_WithRow_ThrowsIfBuildingAnShearingMatrix()
+        {
+            // Arrange
+            var builder = new MatrixBuilder();
+            var transform = _fixture.Create<ShearingTransform>();
+
+            // Act
+            builder.AsShearingMatrix(transform);
 
             // Assert
             Assert.Throws<NotSupportedException>(() => builder.WithRow(10, 11));

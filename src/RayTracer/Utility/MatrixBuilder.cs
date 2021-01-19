@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using RayTracer.Model;
+using RayTracer.Utility.Model;
 
 namespace RayTracer.Utility
 {
@@ -18,7 +19,7 @@ namespace RayTracer.Utility
 
         public MatrixBuilder WithRow(params float[] values)
         {
-            if (_isBuildingIdentityMatrix || _isBuildingTranslationMatrix || _isBuildingScailingMatrix || _isBuildingRotationMatrix)
+            if (_isBuildingIdentityMatrix || _isBuildingTranslationMatrix || _isBuildingScailingMatrix || _isBuildingRotationMatrix || _isBuildingShearingMatrix)
             {
                 throw new NotSupportedException(
                     "Cannot add rows to this Matrix");
@@ -103,6 +104,23 @@ namespace RayTracer.Utility
             return this;
         }
 
+        public MatrixBuilder AsShearingMatrix(ShearingTransform transform)
+        {
+            const int shearingMatrixSize = 4;
+
+            if (_expectedSize.HasValue)
+            {
+                throw new NotSupportedException(
+                    "Shearing Matrices cannot be constructed if rows have already been added");
+            }
+
+            _isBuildingShearingMatrix = true;
+            _expectedSize = shearingMatrixSize;
+            _shearingTransform = transform;
+
+            return this;
+        }
+
         public Matrix Create()
         {
             if (_isBuildingIdentityMatrix)
@@ -120,6 +138,10 @@ namespace RayTracer.Utility
             else if (_isBuildingRotationMatrix)
             {
                 return BuildRotationMatrix(_rotation, _rotationRadians, _expectedSize.Value);
+            }
+            else if (_isBuildingShearingMatrix)
+            {
+                return BuildShearingMatrix(_shearingTransform, _expectedSize.Value);
             }
             else if (!_expectedSize.HasValue)
             {
@@ -215,6 +237,20 @@ namespace RayTracer.Utility
             return matrix;
         }
 
+        private Matrix BuildShearingMatrix(ShearingTransform transform, int size)
+        {
+            var matrix = BuildIdentiyMatrix(size);
+
+            matrix.Set(transform.XinProportionToY, 0, 1);
+            matrix.Set(transform.XinProportionToZ, 0, 2);
+            matrix.Set(transform.YinProportionToX, 1, 0);
+            matrix.Set(transform.YinProportionToZ, 1, 2);
+            matrix.Set(transform.ZinProportionToX, 2, 0);
+            matrix.Set(transform.ZinProportionToY, 2, 1);
+
+            return matrix;
+        }
+
         private readonly List<float[]> _data;
         private int? _expectedSize;
         private bool _isBuildingIdentityMatrix;
@@ -222,6 +258,8 @@ namespace RayTracer.Utility
         private bool _isBuildingScailingMatrix;
         private (int x, int y, int z) _transform;
         private bool _isBuildingRotationMatrix;
+        private bool _isBuildingShearingMatrix;
+        private ShearingTransform _shearingTransform;
         private float _rotationRadians;
         private RotationAxis _rotation;
     }

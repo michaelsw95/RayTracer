@@ -2,6 +2,7 @@
 using AutoFixture;
 using RayTracer.Model;
 using RayTracer.Utility;
+using RayTracer.Utility.Model;
 using Xunit;
 
 namespace RayTracer.UnitTests.ModelTests
@@ -763,7 +764,7 @@ namespace RayTracer.UnitTests.ModelTests
         }
 
         [Fact]
-        public void Matrix_Rotation_Matrices_AreInvertable()
+        public void Matrix_RotationMatrices_AreInvertable()
         {
             // Arrange
             var point = new RayPoint(0, 1, 0);
@@ -779,6 +780,132 @@ namespace RayTracer.UnitTests.ModelTests
             var expected = new RayPoint(0, (float)Math.Sqrt(2) / 2, -(float)Math.Sqrt(2) / 2);
             
             var isEqual = invertedPoint.IsEqual(expected);
+
+            Assert.True(isEqual);
+        }
+
+        [Fact]
+        public void Matrix_ShearingMatrices_MoveXinProportionToY()
+        {
+            // Arrange
+            var transform = new ShearingTransform { XinProportionToY = 1 };
+            var point = new RayPoint(2, 3, 4);
+
+            var shearing = new MatrixBuilder()
+                .AsShearingMatrix(transform)
+                .Create();
+
+            // Act
+            var skewed = point.Multiply(shearing);
+
+            // Assert
+            var expected = new RayPoint(5, 3, 4);
+            var isEqual = skewed.IsEqual(expected);
+
+            Assert.True(isEqual);
+        }
+
+        [Fact]
+        public void Matrix_ShearingMatrices_MoveXinProportionToZ()
+        {
+            // Arrange
+            var transform = new ShearingTransform { XinProportionToZ = 1 };
+            var point = new RayPoint(2, 3, 4);
+
+            var shearing = new MatrixBuilder()
+                .AsShearingMatrix(transform)
+                .Create();
+
+            // Act
+            var skewed = point.Multiply(shearing);
+
+            // Assert
+            var expected = new RayPoint(6, 3, 4);
+            var isEqual = skewed.IsEqual(expected);
+
+            Assert.True(isEqual);
+        }
+
+        [Fact]
+        public void Matrix_ShearingMatrices_MoveYinProportionToX()
+        {
+            // Arrange
+            var transform = new ShearingTransform { YinProportionToX = 1 };
+            var point = new RayPoint(2, 3, 4);
+
+            var shearing = new MatrixBuilder()
+                .AsShearingMatrix(transform)
+                .Create();
+
+            // Act
+            var skewed = point.Multiply(shearing);
+
+            // Assert
+            var expected = new RayPoint(2, 5, 4);
+            var isEqual = skewed.IsEqual(expected);
+
+            Assert.True(isEqual);
+        }
+
+        [Fact]
+        public void Matrix_ShearingMatrices_MoveYinProportionToZ()
+        {
+            // Arrange
+            var transform = new ShearingTransform { YinProportionToZ = 1 };
+            var point = new RayPoint(2, 3, 4);
+
+            var shearing = new MatrixBuilder()
+                .AsShearingMatrix(transform)
+                .Create();
+
+            // Act
+            var skewed = point.Multiply(shearing);
+
+            // Assert
+            var expected = new RayPoint(2, 7, 4);
+            var isEqual = skewed.IsEqual(expected);
+
+            Assert.True(isEqual);
+        }
+
+        [Fact]
+        public void Matrix_ShearingMatrices_MoveZinProportionToX()
+        {
+            // Arrange
+            var transform = new ShearingTransform { ZinProportionToX = 1 };
+            var point = new RayPoint(2, 3, 4);
+
+            var shearing = new MatrixBuilder()
+                .AsShearingMatrix(transform)
+                .Create();
+
+            // Act
+            var skewed = point.Multiply(shearing);
+
+            // Assert
+            var expected = new RayPoint(2, 3, 6);
+            var isEqual = skewed.IsEqual(expected);
+
+            Assert.True(isEqual);
+        }
+
+        [Fact]
+        public void Matrix_ShearingMatrices_MoveZinProportionToY()
+        {
+            // Arrange
+            var transform = new ShearingTransform { ZinProportionToY = 1 };
+            var point = new RayPoint(2, 3, 4);
+
+            var shearing = new MatrixBuilder()
+                .AsShearingMatrix(transform)
+                .Create();
+
+            // Act
+            var skewed = point.Multiply(shearing);
+
+            // Assert
+            var expected = new RayPoint(2, 3, 7);
+            var isEqual = skewed.IsEqual(expected);
 
             Assert.True(isEqual);
         }
