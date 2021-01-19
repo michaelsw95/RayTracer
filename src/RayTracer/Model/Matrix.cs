@@ -11,7 +11,7 @@ namespace RayTracer.Model
             _matrix = new float[size * size];
         }
 
-        public int Size { get; private set; }
+        public int Size { get; init; }
 
         public float Get(int row, int column)
         {
