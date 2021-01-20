@@ -7,11 +7,11 @@ using Xunit;
 
 namespace RayTracer.UnitTests.ModelTests
 {
-    public class MatricTests
+    public class MatrixTests
     {
         private readonly Fixture _fixture;
 
-        public MatricTests()
+        public MatrixTests()
         {
             _fixture = new Fixture();
         }
@@ -255,9 +255,7 @@ namespace RayTracer.UnitTests.ModelTests
 
             builder.Reset();
 
-            var identityMatrix = builder
-                .AsIdentityMatrix(3)
-                .Create();
+            var identityMatrix = Transformation.GetIdentiyMatrix(3);
 
             // Act
             var multipliedMatrix = matrix
@@ -320,9 +318,7 @@ namespace RayTracer.UnitTests.ModelTests
         public void Matrix_Transpose_TransposedIdentityMatrixIsStillAnIdentityMatrix()
         {
             // Arrange
-            var identityMatrix = new MatrixBuilder()
-                .AsIdentityMatrix(3)
-                .Create();
+            var identityMatrix = Transformation.GetIdentiyMatrix(3);
 
             // Act
             var transposedMatrix = identityMatrix
@@ -658,254 +654,6 @@ namespace RayTracer.UnitTests.ModelTests
 
             // Assert
             var isEqual = matrixOne.IsEqual(multipliedInverseMatrix);
-
-            Assert.True(isEqual);
-        }
-
-        [Fact]
-        public void Matrix_TranslationMatrices_DoNotAffectVectors()
-        {
-            // Arrange
-            var vector = new RayVector(-3, 4, 5);
-
-            // Act
-            var transform = new MatrixBuilder()
-                .AsTranslationMatrix(5, -3, 2)
-                .Create();
-
-            var translated = transform.Multiply(vector);
-
-            // Assert
-            Assert.True(vector.IsEqual(translated));
-        }
-
-        [Fact]
-        public void Matrix_TranslationMatrices_AreInvertable()
-        {
-            // Arrange
-            var point = new RayPoint(-3, 4, 5);
-
-            var transform = new MatrixBuilder()
-                .AsTranslationMatrix(5, -3, 2)
-                .Create();
-
-            // Act
-            var invertedTransform = transform.Inverse();
-
-            var transformed = invertedTransform.Multiply(point);
-
-            // Assert
-            var expected = new RayPoint(-8, 7, 3);
-            var isEqual = expected.IsEqual(transformed); 
-            
-            Assert.True(isEqual);
-        }
-
-        [Fact]
-        public void Matrix_ScailingMatrices_DoApplyToVectors()
-        {
-            // Arrange
-            var vector = new RayVector(-4, 6, 8);
-
-            // Act
-            var transform = new MatrixBuilder()
-                .AsScailingMatrix(2, 3, 4)
-                .Create();
-
-            var scailed = transform.Multiply(vector);
-
-            // Assert
-            var expected = new RayVector(-8, 18, 32);
-            var isEqual = scailed.IsEqual(expected);
-
-            Assert.True(isEqual);
-        }
-
-        [Fact]
-        public void Matrix_ScailingMatrices_AreInvertable()
-        {
-            // Arrange
-            var vector = new RayVector(-4, 6, 8);
-
-            var scail = new MatrixBuilder()
-                .AsScailingMatrix(2, 3, 4)
-                .Create();
-
-            // Act
-            var invertedScail = scail.Inverse();
-
-            var transformed = invertedScail.Multiply(vector);
-
-            // Assert
-            var expected = new RayVector(-2, 2, 2);
-            var isEqual = expected.IsEqual(transformed); 
-            
-            Assert.True(isEqual);
-        }
-
-        [Fact]
-        public void Matrix_CanBeReflectedUsingScailing()
-        {
-            // Arrange
-            var reflection = new MatrixBuilder()
-                .AsScailingMatrix(-1, 1, 1)
-                .Create();
-            
-            var point = new RayPoint(2, 3, 4);
-
-            // Act
-            var reflected = reflection.Multiply(point);
-
-            // Assert
-            var expected = new RayPoint(-2, 3, 4);
-            var isEqual = expected.IsEqual(reflected);
-
-            Assert.True(isEqual);
-        }
-
-        [Fact]
-        public void Matrix_RotationMatrices_AreInvertable()
-        {
-            // Arrange
-            var point = new RayPoint(0, 1, 0);
-
-            var halfQuarter = new MatrixBuilder()
-                .AsRotationMatrix(RotationAxis.X, (float)Math.PI / 4)
-                .Create();
-
-            // Act
-            var invertedPoint = halfQuarter.Inverse().Multiply(point);
-
-            // Assert
-            var expected = new RayPoint(0, (float)Math.Sqrt(2) / 2, -(float)Math.Sqrt(2) / 2);
-            
-            var isEqual = invertedPoint.IsEqual(expected);
-
-            Assert.True(isEqual);
-        }
-
-        [Fact]
-        public void Matrix_ShearingMatrices_MoveXinProportionToY()
-        {
-            // Arrange
-            var transform = new ShearingTransform { XinProportionToY = 1 };
-            var point = new RayPoint(2, 3, 4);
-
-            var shearing = new MatrixBuilder()
-                .AsShearingMatrix(transform)
-                .Create();
-
-            // Act
-            var skewed = point.Multiply(shearing);
-
-            // Assert
-            var expected = new RayPoint(5, 3, 4);
-            var isEqual = skewed.IsEqual(expected);
-
-            Assert.True(isEqual);
-        }
-
-        [Fact]
-        public void Matrix_ShearingMatrices_MoveXinProportionToZ()
-        {
-            // Arrange
-            var transform = new ShearingTransform { XinProportionToZ = 1 };
-            var point = new RayPoint(2, 3, 4);
-
-            var shearing = new MatrixBuilder()
-                .AsShearingMatrix(transform)
-                .Create();
-
-            // Act
-            var skewed = point.Multiply(shearing);
-
-            // Assert
-            var expected = new RayPoint(6, 3, 4);
-            var isEqual = skewed.IsEqual(expected);
-
-            Assert.True(isEqual);
-        }
-
-        [Fact]
-        public void Matrix_ShearingMatrices_MoveYinProportionToX()
-        {
-            // Arrange
-            var transform = new ShearingTransform { YinProportionToX = 1 };
-            var point = new RayPoint(2, 3, 4);
-
-            var shearing = new MatrixBuilder()
-                .AsShearingMatrix(transform)
-                .Create();
-
-            // Act
-            var skewed = point.Multiply(shearing);
-
-            // Assert
-            var expected = new RayPoint(2, 5, 4);
-            var isEqual = skewed.IsEqual(expected);
-
-            Assert.True(isEqual);
-        }
-
-        [Fact]
-        public void Matrix_ShearingMatrices_MoveYinProportionToZ()
-        {
-            // Arrange
-            var transform = new ShearingTransform { YinProportionToZ = 1 };
-            var point = new RayPoint(2, 3, 4);
-
-            var shearing = new MatrixBuilder()
-                .AsShearingMatrix(transform)
-                .Create();
-
-            // Act
-            var skewed = point.Multiply(shearing);
-
-            // Assert
-            var expected = new RayPoint(2, 7, 4);
-            var isEqual = skewed.IsEqual(expected);
-
-            Assert.True(isEqual);
-        }
-
-        [Fact]
-        public void Matrix_ShearingMatrices_MoveZinProportionToX()
-        {
-            // Arrange
-            var transform = new ShearingTransform { ZinProportionToX = 1 };
-            var point = new RayPoint(2, 3, 4);
-
-            var shearing = new MatrixBuilder()
-                .AsShearingMatrix(transform)
-                .Create();
-
-            // Act
-            var skewed = point.Multiply(shearing);
-
-            // Assert
-            var expected = new RayPoint(2, 3, 6);
-            var isEqual = skewed.IsEqual(expected);
-
-            Assert.True(isEqual);
-        }
-
-        [Fact]
-        public void Matrix_ShearingMatrices_MoveZinProportionToY()
-        {
-            // Arrange
-            var transform = new ShearingTransform { ZinProportionToY = 1 };
-            var point = new RayPoint(2, 3, 4);
-
-            var shearing = new MatrixBuilder()
-                .AsShearingMatrix(transform)
-                .Create();
-
-            // Act
-            var skewed = point.Multiply(shearing);
-
-            // Assert
-            var expected = new RayPoint(2, 3, 7);
-            var isEqual = skewed.IsEqual(expected);
 
             Assert.True(isEqual);
         }
