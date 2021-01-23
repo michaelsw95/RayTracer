@@ -8,7 +8,7 @@ using RayTracer.Utility.Model;
 
 namespace RayTracer.TestScenarios.Scenarios
 {
-    public class Clock : IScenario
+    public class ClockPlotter : IScenario
     {
         public void Run()
         {
