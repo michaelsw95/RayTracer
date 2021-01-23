@@ -9,7 +9,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{08BEEB51-9
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RayTracer", "src\RayTracer\RayTracer.csproj", "{05C61A86-3348-4516-BB66-51B1BF8517CC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RayTracer.UnitTests", "test\RayTracer.UnitTests\RayTracer.UnitTests.csproj", "{69F63DB2-2C35-4C9D-B9CB-460BD1EBBEB8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RayTracer.UnitTests", "test\RayTracer.UnitTests\RayTracer.UnitTests.csproj", "{69F63DB2-2C35-4C9D-B9CB-460BD1EBBEB8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RayTracer.TestScenarios", "RayTracer.TestScenarios\RayTracer.TestScenarios.csproj", "{030F8953-DE9A-4C4A-8079-A068B7B4DDA7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -25,6 +27,10 @@ Global
 		{69F63DB2-2C35-4C9D-B9CB-460BD1EBBEB8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{69F63DB2-2C35-4C9D-B9CB-460BD1EBBEB8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{69F63DB2-2C35-4C9D-B9CB-460BD1EBBEB8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{030F8953-DE9A-4C4A-8079-A068B7B4DDA7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{030F8953-DE9A-4C4A-8079-A068B7B4DDA7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{030F8953-DE9A-4C4A-8079-A068B7B4DDA7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{030F8953-DE9A-4C4A-8079-A068B7B4DDA7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -32,6 +38,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{05C61A86-3348-4516-BB66-51B1BF8517CC} = {8F3EEE2A-ADA6-4CD3-A0C1-E690FB680B15}
 		{69F63DB2-2C35-4C9D-B9CB-460BD1EBBEB8} = {08BEEB51-941E-4D67-994E-D879BF45B84B}
+		{030F8953-DE9A-4C4A-8079-A068B7B4DDA7} = {08BEEB51-941E-4D67-994E-D879BF45B84B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {910D9806-55AC-444A-A950-4C75B572D592}
