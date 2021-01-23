@@ -11,6 +11,9 @@ namespace RayTracer.TestScenarios
         {
             {
                 0, ("Projectile Plotter", new ProjectilePlotter())
+            },
+            {
+                1, ("Clock", new Clock())
             }
         };
 
