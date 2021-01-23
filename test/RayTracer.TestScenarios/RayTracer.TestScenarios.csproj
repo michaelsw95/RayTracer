@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\src\RayTracer\RayTracer.csproj" />
+    <ProjectReference Include="..\..\src\RayTracer\RayTracer.csproj" />
   </ItemGroup>
 
 </Project>
