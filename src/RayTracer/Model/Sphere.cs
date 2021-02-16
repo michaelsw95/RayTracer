@@ -1,19 +1,12 @@
-using System;
-
 namespace RayTracer.Model
 {
-    public class Sphere
+    public class Sphere : WorldObject
     {
-        private Guid _id;
-
         public RayPoint CentrePoint { get; init; }
-        public float Radii;
-
+        public float Radii { get; init; }
 
         public Sphere()
         {
-            _id = Guid.NewGuid();
-
             // TODO - Assign dynamically
             CentrePoint = new RayPoint(0, 0, 0);
             Radii = 1;

@@ -15,7 +15,7 @@ namespace RayTracer.Model
 
         public RayPoint GetPosition(float distance) => Direction.Multiply(distance).Add(Origin) as RayPoint;
 
-        public float[] GetIntersects(Sphere sphere, Ray ray)
+        public Intersection[] GetIntersects(Sphere sphere, Ray ray)
         {
             var sphereToRay = ray.Origin.Subtract(sphere.CentrePoint) as RayVector;
 
@@ -23,18 +23,26 @@ namespace RayTracer.Model
             var partB = 2 * ray.Direction.DotProduct(sphereToRay);
             var partC = sphereToRay.DotProduct(sphereToRay) - 1;
 
-            var discriminant = Math.Pow(partB, 2) - 4 * partA * partC;
-
-            if (discriminant < 0)
+            if (ThereAreNoIntersections(out var discriminant))
             {
-                return new float[0];
+                return new Intersection[0];
             }
 
-            return new float[2]
+            var highIntersection = (-partB - Math.Sqrt(discriminant)) / (2 * partA);
+            var lowIntersection = (-partB + Math.Sqrt(discriminant)) / (2 * partA);
+
+            return new Intersection[2]
             {
-                (float)(-partB - Math.Sqrt(discriminant)) / (2 * partA),
-                (float)(-partB + Math.Sqrt(discriminant)) / (2 * partA)
+                new Intersection((float)highIntersection, sphere),
+                new Intersection((float)lowIntersection, sphere)
             };
+
+            bool ThereAreNoIntersections(out float discriminant)
+            {
+                discriminant = (float)Math.Pow(partB, 2) - 4 * partA * partC;
+
+                return discriminant < 0;
+            }
         }
     }
 }

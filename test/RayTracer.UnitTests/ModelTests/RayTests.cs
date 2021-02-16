@@ -73,14 +73,21 @@ namespace RayTracer.UnitTests.ModelTests
         {
             // Arrange
             var ray = new Ray(new RayPoint(0, 0, -5), new RayVector(0, 0, 1));
+            var sphere = new Sphere();
 
             // Act
-            var intersections = ray.GetIntersects(new Sphere(), ray);
+            var intersections = ray.GetIntersects(sphere, ray);
 
             // Assert
             Assert.Equal(2, intersections.Length);
-            Assert.True(Numeric.FloatIsEqual(4, intersections[0]));
-            Assert.True(Numeric.FloatIsEqual(6, intersections[1]));
+
+            foreach (var intersection in intersections)
+            {
+                Assert.Equal(sphere, intersection.Object);
+            }
+
+            Assert.True(Numeric.FloatIsEqual(4, intersections[0].Value));
+            Assert.True(Numeric.FloatIsEqual(6, intersections[1].Value));
         }
 
         [Fact]
@@ -88,14 +95,21 @@ namespace RayTracer.UnitTests.ModelTests
         {
             // Arrange
             var ray = new Ray(new RayPoint(0, 1, -5), new RayVector(0, 0, 1));
+            var sphere = new Sphere();
 
             // Act
-            var intersections = ray.GetIntersects(new Sphere(), ray);
+            var intersections = ray.GetIntersects(sphere, ray);
 
             // Assert
             Assert.Equal(2, intersections.Length);
-            Assert.True(Numeric.FloatIsEqual(5, intersections[0]));
-            Assert.True(Numeric.FloatIsEqual(5, intersections[1]));
+
+            foreach (var intersection in intersections)
+            {
+                Assert.Equal(sphere, intersection.Object);
+            }
+
+            Assert.True(Numeric.FloatIsEqual(5, intersections[0].Value));
+            Assert.True(Numeric.FloatIsEqual(5, intersections[1].Value));
         }
 
         [Fact]
@@ -103,14 +117,21 @@ namespace RayTracer.UnitTests.ModelTests
         {
             // Arrange
             var ray = new Ray(new RayPoint(0, 0, 0), new RayVector(0, 0, 1));
+            var sphere = new Sphere();
 
             // Act
-            var intersections = ray.GetIntersects(new Sphere(), ray);
+            var intersections = ray.GetIntersects(sphere, ray);
 
             // Assert
             Assert.Equal(2, intersections.Length);
-            Assert.True(Numeric.FloatIsEqual(-1, intersections[0]));
-            Assert.True(Numeric.FloatIsEqual(1, intersections[1]));
+
+            foreach (var intersection in intersections)
+            {
+                Assert.Equal(sphere, intersection.Object);
+            }
+
+            Assert.True(Numeric.FloatIsEqual(-1, intersections[0].Value));
+            Assert.True(Numeric.FloatIsEqual(1, intersections[1].Value));
         }
 
         [Fact]
@@ -118,14 +139,21 @@ namespace RayTracer.UnitTests.ModelTests
         {
             // Arrange
             var ray = new Ray(new RayPoint(0, 0, 5), new RayVector(0, 0, 1));
+            var sphere = new Sphere();
 
             // Act
-            var intersections = ray.GetIntersects(new Sphere(), ray);
+            var intersections = ray.GetIntersects(sphere, ray);
 
             // Assert
             Assert.Equal(2, intersections.Length);
-            Assert.True(Numeric.FloatIsEqual(-6, intersections[0]));
-            Assert.True(Numeric.FloatIsEqual(-4, intersections[1]));
+
+            foreach (var intersection in intersections)
+            {
+                Assert.Equal(sphere, intersection.Object);
+            }
+
+            Assert.True(Numeric.FloatIsEqual(-6, intersections[0].Value));
+            Assert.True(Numeric.FloatIsEqual(-4, intersections[1].Value));
         }
     }
 }
