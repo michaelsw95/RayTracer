@@ -155,5 +155,47 @@ namespace RayTracer.UnitTests.ModelTests
             Assert.True(Numeric.FloatIsEqual(-6, intersections[0].Value));
             Assert.True(Numeric.FloatIsEqual(-4, intersections[1].Value));
         }
+
+        [Fact]
+        public void Ray_Transform_CanTransformRay_UsingTranslations()
+        {
+            // Arrange
+            var origin = new RayPoint(1, 2, 3);
+            var direction = new RayVector(0, 1, 0);
+            var ray = new Ray(origin, direction);
+
+            var translation = Transformation.GetTranslationMatrix(3, 4, 5);
+
+            // Act
+            var transformedRay = ray.Transform(translation);
+
+            // Assert
+            var expectedOrigin = new RayPoint(4, 6, 8);
+            var expectedDirection = new RayVector(0, 1, 0);
+
+            Assert.True(expectedOrigin.IsEqual(transformedRay.Origin));
+            Assert.True(expectedDirection.IsEqual(transformedRay.Direction));
+        }
+
+        [Fact]
+        public void Ray_Transform_CanTransformRay_UsingScailing()
+        {
+            // Arrange
+            var origin = new RayPoint(1, 2, 3);
+            var direction = new RayVector(0, 1, 0);
+            var ray = new Ray(origin, direction);
+
+            var translation = Transformation.GetScailingMatrix(2, 3, 4);
+
+            // Act
+            var transformedRay = ray.Transform(translation);
+
+            // Assert
+            var expectedOrigin = new RayPoint(2, 6, 12);
+            var expectedDirection = new RayVector(0, 3, 0);
+
+            Assert.True(expectedOrigin.IsEqual(transformedRay.Origin));
+            Assert.True(expectedDirection.IsEqual(transformedRay.Direction));
+        }
     }
 }

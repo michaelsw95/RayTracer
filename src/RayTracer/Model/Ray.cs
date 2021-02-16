@@ -44,5 +44,15 @@ namespace RayTracer.Model
                 return discriminant < 0;
             }
         }
+
+        public Ray Transform(Matrix transformation)
+        {
+            var transformedOrigin = Origin.Multiply(transformation) as RayPoint;
+            var transformedDirection = Direction.Multiply(transformation) as RayVector;
+
+            var transformedRay = new Ray(transformedOrigin, transformedDirection);
+
+            return transformedRay;
+        }
     }
 }
