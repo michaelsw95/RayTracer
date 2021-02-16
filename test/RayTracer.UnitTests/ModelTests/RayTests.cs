@@ -1,5 +1,6 @@
 ﻿using AutoFixture;
 using RayTracer.Model;
+using RayTracer.Utility;
 using Xunit;
 
 namespace RayTracer.UnitTests.ModelTests
@@ -52,6 +53,21 @@ namespace RayTracer.UnitTests.ModelTests
             Assert.True(expectedTwo.IsEqual(positionTwo));
             Assert.True(expectedThree.IsEqual(positionThree));
             Assert.True(expectedFour.IsEqual(positionFour));
+        }
+
+        [Fact]
+        public void Ray_GetIntersections_ReturnsTwoPoints_ForSpheres()
+        {
+            // Arrange
+            var ray = new Ray(new RayPoint(0, 0, -5), new RayVector(0, 0, 1));
+
+            // Act
+            var intersections = ray.GetIntersects(new Sphere(), ray);
+
+            // Assert
+            Assert.Equal(2, intersections.Length);
+            Assert.True(Numeric.FloatIsEqual(4, intersections[0]));
+            Assert.True(Numeric.FloatIsEqual(6, intersections[1]));
         }
     }
 }

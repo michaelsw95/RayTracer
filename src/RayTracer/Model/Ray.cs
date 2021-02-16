@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RayTracer.Model
 {
@@ -18,5 +14,27 @@ namespace RayTracer.Model
         public RayVector Direction { get; }
 
         public RayPoint GetPosition(float distance) => Direction.Multiply(distance).Add(Origin) as RayPoint;
+
+        public float[] GetIntersects(Sphere sphere, Ray ray)
+        {
+            var sphereToRay = ray.Origin.Subtract(sphere.CentrePoint) as RayVector;
+
+            var partA = ray.Direction.DotProduct(ray.Direction);
+            var partB = 2 * ray.Direction.DotProduct(sphereToRay);
+            var partC = sphereToRay.DotProduct(sphereToRay) - 1;
+
+            var discriminant = Math.Pow(partB, 2) - 4 * partA * partC;
+
+            if (discriminant < 0)
+            {
+                return new float[0];
+            }
+
+            return new float[2]
+            {
+                (float)(-partB - Math.Sqrt(discriminant)) / (2 * partA),
+                (float)(-partB + Math.Sqrt(discriminant)) / (2 * partA)
+            };
+        }
     }
 }
