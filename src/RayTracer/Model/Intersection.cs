@@ -1,3 +1,5 @@
+using System.Linq;
+
 namespace RayTracer.Model
 {
     public class Intersection
@@ -12,5 +14,11 @@ namespace RayTracer.Model
         }
 
         public static Intersection[] Aggregate(params Intersection[] intersections) => intersections;
+        
+        public static Intersection GetHit(Intersection[] intersections) =>
+            intersections
+                .OrderBy(o => o.Value)
+                .Where(o => o.Value > 0)
+                .FirstOrDefault();
     }
 }

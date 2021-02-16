@@ -43,6 +43,77 @@ namespace RayTracer.UnitTests.ModelTests
             Assert.Equal(3, aggregationThree.Length);
         }
 
+        [Fact]
+        public void GetHit_ReturnsTheCorrectHit_WhenAllIntersectionsArePositive()
+        {
+            // Arrange
+            var sphere = new Sphere();
+            var intersectionOne = new Intersection(2, sphere);
+            var intersectionTwo = new Intersection(4, sphere);
+            var intersections = Intersection.Aggregate(intersectionOne, intersectionTwo);
+            
+            // Act
+            var hit = Intersection.GetHit(intersections);
+
+            // Assert
+            Assert.Equal(intersectionOne, hit);
+        }
+
+        [Fact]
+        public void GetHit_ReturnsTheCorrectHit_WhenSomeIntersectionsAreNegative()
+        {
+            // Arrange
+            var sphere = new Sphere();
+            var intersectionOne = new Intersection(-2, sphere);
+            var intersectionTwo = new Intersection(3, sphere);
+            var intersections = Intersection.Aggregate(intersectionOne, intersectionTwo);
+            
+            // Act
+            var hit = Intersection.GetHit(intersections);
+
+            // Assert
+            Assert.Equal(intersectionTwo, hit);
+        }
+
+        [Fact]
+        public void GetHit_ReturnsTheCorrectHit_WhenAllIntersectionsAreNegative()
+        {
+            // Arrange
+            var sphere = new Sphere();
+            var intersectionOne = new Intersection(-1, sphere);
+            var intersectionTwo = new Intersection(-1, sphere);
+            var intersections = Intersection.Aggregate(intersectionOne, intersectionTwo);
+            
+            // Act
+            var hit = Intersection.GetHit(intersections);
+
+            // Assert
+            Assert.Null(hit);
+        }
+
+        [Fact]
+        public void GetHit_ReturnsTheLowestNoneNegativeIntersection()
+        {
+            // Arrange
+            var sphere = new Sphere();
+            var intersectionOne = new Intersection(6, sphere);
+            var intersectionTwo = new Intersection(9, sphere);
+            var intersectionThree = new Intersection(-2, sphere);
+            var intersectionFour = new Intersection(1, sphere);
+
+            var intersections = Intersection.Aggregate(
+                intersectionOne,
+                intersectionTwo,
+                intersectionThree,
+                intersectionFour);
+            
+            // Act
+            var hit = Intersection.GetHit(intersections);
+
+            // Assert
+            Assert.Equal(intersectionFour, hit);
+        }
+
         private Fixture _fixture;
     }
 }
