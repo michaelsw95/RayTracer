@@ -14,6 +14,9 @@ namespace RayTracer.TestScenarios
             },
             {
                 1, ("Clock Plotter", new ClockPlotter())
+            },
+            {
+                2, ("Sphere", new SpherePlotter())
             }
         };
 
