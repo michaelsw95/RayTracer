@@ -15,12 +15,15 @@ namespace RayTracer.Model
 
         public RayPoint GetPosition(float distance) => Direction.Multiply(distance).Add(Origin) as RayPoint;
 
-        public Intersection[] GetIntersects(Sphere sphere, Ray ray)
+        public Intersection[] GetIntersects(Sphere sphere)
         {
-            var sphereToRay = ray.Origin.Subtract(sphere.CentrePoint) as RayVector;
+            var invertedObjectTransform = sphere.Transform.Inverse();
+            var mutatedRay = new Ray(Origin, Direction).Transform(invertedObjectTransform);
 
-            var partA = ray.Direction.DotProduct(ray.Direction);
-            var partB = 2 * ray.Direction.DotProduct(sphereToRay);
+            var sphereToRay = mutatedRay.Origin.Subtract(sphere.CentrePoint) as RayVector;
+
+            var partA = mutatedRay.Direction.DotProduct(mutatedRay.Direction);
+            var partB = 2 * mutatedRay.Direction.DotProduct(sphereToRay);
             var partC = sphereToRay.DotProduct(sphereToRay) - 1;
 
             if (ThereAreNoIntersections(out var discriminant))

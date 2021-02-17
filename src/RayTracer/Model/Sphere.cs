@@ -19,5 +19,7 @@ namespace RayTracer.Model
             CentrePoint = new RayPoint(0, 0, 0);
             Radii = 1;
         }
+
+        public Intersection[] GetIntersects(Ray ray) => ray.GetIntersects(this);
     }
 }

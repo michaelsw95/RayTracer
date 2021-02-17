@@ -62,7 +62,7 @@ namespace RayTracer.UnitTests.ModelTests
             var ray = new Ray(new RayPoint(0, 2, -5), new RayVector(0, 0, 1));
 
             // Act
-            var intersections = ray.GetIntersects(new Sphere(), ray);
+            var intersections = ray.GetIntersects(new Sphere());
 
             // Assert
             Assert.Equal(0, intersections.Length);
@@ -76,7 +76,7 @@ namespace RayTracer.UnitTests.ModelTests
             var sphere = new Sphere();
 
             // Act
-            var intersections = ray.GetIntersects(sphere, ray);
+            var intersections = ray.GetIntersects(sphere);
 
             // Assert
             Assert.Equal(2, intersections.Length);
@@ -98,7 +98,7 @@ namespace RayTracer.UnitTests.ModelTests
             var sphere = new Sphere();
 
             // Act
-            var intersections = ray.GetIntersects(sphere, ray);
+            var intersections = ray.GetIntersects(sphere);
 
             // Assert
             Assert.Equal(2, intersections.Length);
@@ -120,7 +120,7 @@ namespace RayTracer.UnitTests.ModelTests
             var sphere = new Sphere();
 
             // Act
-            var intersections = ray.GetIntersects(sphere, ray);
+            var intersections = ray.GetIntersects(sphere);
 
             // Assert
             Assert.Equal(2, intersections.Length);
@@ -142,7 +142,7 @@ namespace RayTracer.UnitTests.ModelTests
             var sphere = new Sphere();
 
             // Act
-            var intersections = ray.GetIntersects(sphere, ray);
+            var intersections = ray.GetIntersects(sphere);
 
             // Assert
             Assert.Equal(2, intersections.Length);
@@ -196,6 +196,48 @@ namespace RayTracer.UnitTests.ModelTests
 
             Assert.True(expectedOrigin.IsEqual(transformedRay.Origin));
             Assert.True(expectedDirection.IsEqual(transformedRay.Direction));
+        }
+
+        [Fact]
+        public void Ray_GetIntersects_AccountsForSphereTransformations_WhereScailing()
+        {
+            // Arrange
+            var origin = new RayPoint(0, 0, -5);
+            var direction = new RayVector(0, 0, 1);
+            var ray = new Ray(origin, direction);
+            var transform = Transformation.GetScailingMatrix(2, 2, 2);
+            var sphere = new Sphere() { Transform = transform };
+
+            // Act
+            var intersects = ray.GetIntersects(sphere);
+
+            // Assert
+            Assert.Equal(2, intersects.Length);
+
+            foreach (var intersection in intersects)
+            {
+                Assert.Equal(sphere, intersection.Object);
+            }
+
+            Assert.True(Numeric.FloatIsEqual(3, intersects[0].Value));
+            Assert.True(Numeric.FloatIsEqual(7, intersects[1].Value));
+        }
+
+        [Fact]
+        public void Ray_GetIntersects_AccountsForSphereTransformations_WhenTranslating()
+        {
+            // Arrange
+            var origin = new RayPoint(0, 0, -5);
+            var direction = new RayVector(0, 0, 1);
+            var ray = new Ray(origin, direction);
+            var transform = Transformation.GetTranslationMatrix(5, 0, 0);
+            var sphere = new Sphere() { Transform = transform };
+
+            // Act
+            var intersects = ray.GetIntersects(sphere);
+
+            // Assert
+            Assert.Equal(0, intersects.Length);
         }
     }
 }
