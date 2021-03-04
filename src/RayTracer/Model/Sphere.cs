@@ -21,5 +21,8 @@ namespace RayTracer.Model
         }
 
         public Intersection[] GetIntersects(Ray ray) => ray.GetIntersects(this);
+
+        public RayVector GetSurfaceNormalAt(RayPoint point) =>
+            (point.Subtract(new RayPoint(0, 0, 0)) as RayVector).Normalise();
     }
 }

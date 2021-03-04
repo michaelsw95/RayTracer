@@ -1,3 +1,4 @@
+using System;
 using RayTracer.Model;
 using RayTracer.Utility;
 using Xunit;
@@ -73,6 +74,65 @@ namespace RayTracer.UnitTests.ModelTests
 
             Assert.True(Numeric.FloatIsEqual(4, intersections[0].Value));
             Assert.True(Numeric.FloatIsEqual(6, intersections[1].Value));
+        }
+
+        [Theory]
+        [InlineData(1, 0, 0)]
+        [InlineData(0, 1, 0)]
+        [InlineData(0, 0, 1)]
+        public void Sphere_GetSurfaceNormalAt_ReturnsNormalAtPointOnAnAxis(int xPoint, int yPoint, int zPoint)
+        {
+            // Arrange
+            var sphere = new Sphere();
+            var point = new RayPoint(xPoint, yPoint, zPoint);
+
+            // Act
+            var surfaceNormal = sphere.GetSurfaceNormalAt(point);
+
+            // Assert
+            var expected = new RayVector(xPoint, yPoint, zPoint);
+
+            var isEqual = expected.IsEqual(surfaceNormal);
+
+            Assert.True(isEqual);    
+        }
+
+        [Fact]
+        public void Sphere_GetSurfaceNormalAt_ReturnsNormalAtNonAxisPoint()
+        {
+            // Arrange
+            var position = ((float)Math.Sqrt(3) / 3);
+
+            var sphere = new Sphere();
+            var point = new RayPoint(position, position, position);
+
+            // Act
+            var surfaceNormal = sphere.GetSurfaceNormalAt(point);
+
+            // Assert
+            var expected = new RayVector(position, position, position);
+
+            var isEqual = expected.IsEqual(surfaceNormal);
+
+            Assert.True(isEqual);   
+        }
+
+        [Fact]
+        public void Sphere_GetSurfaceNormalAt_ReturnsAnNormalisedVector()
+        {
+            // Arrange
+            var position = ((float)Math.Sqrt(3) / 3);
+
+            var sphere = new Sphere();
+            var point = new RayPoint(position, position, position);
+
+            // Act
+            var surfaceNormal = sphere.GetSurfaceNormalAt(point);
+
+            // Assert
+            var isEqual = surfaceNormal.Normalise().IsEqual(surfaceNormal);
+
+            Assert.True(isEqual);   
         }
     }
 }
