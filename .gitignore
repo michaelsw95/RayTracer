@@ -416,3 +416,6 @@ healthchecksdb
 
 # Mac OS
 .DS_Store
+
+# Generated Images
+*.ppm
